@@ -149,6 +149,43 @@ export const products: Product[] = [
       "/assets/images/red-rose/pexels-senori-64457218-19478946.jpg",
     ],
   },
+  {
+    id: 8,
+    name: "Baby's Breath",
+    slug: "babys-breath",
+    category: "Gypsophila",
+    price: 65_000,
+    stock: 25,
+    description:
+      "Bunga kecil nan memesona dengan tampilan minimalis yang elegan. Sempurna sebagai rangkaian mandiri maupun pelengkap buket untuk sentuhan akhir yang airy dan feminin.",
+    heroImage:
+      "/assets/images/baby%27s%20breath/armennano-flowers-6885306.jpg",
+    images: [
+      "/assets/images/baby%27s%20breath/armennano-flowers-6885306.jpg",
+      "/assets/images/baby%27s%20breath/digitalphotolinds-flowers-1216049.jpg",
+      "/assets/images/baby%27s%20breath/neelam279-chrysanthemum-6149833.jpg",
+      "/assets/images/baby%27s%20breath/tfirdous051020011-coffee-6401190.jpg",
+    ],
+  },
+  {
+    id: 9,
+    name: "Hydrangea",
+    slug: "hydrangea",
+    category: "Hortensia",
+    price: 175_000,
+    stock: 9,
+    description:
+      "Bunga hortensia dengan kelompok kelopak lebat yang memukau, hadir dalam nuansa biru, ungu, dan pink. Pilihan favorit untuk dekorasi pernikahan dan hadiah eksklusif.",
+    heroImage:
+      "/assets/images/hydrangea/couleur-hydrangea-3487664.jpg",
+    images: [
+      "/assets/images/hydrangea/couleur-hydrangea-3487664.jpg",
+      "/assets/images/hydrangea/hans-garden-hydrangea-4134289.jpg",
+      "/assets/images/hydrangea/janetrr-blue-hydrangea-flower-1544194.jpg",
+      "/assets/images/hydrangea/marabarboza-hydrangea-macrophylla-4619715.jpg",
+      "/assets/images/hydrangea/nennieinszweidrei-hydrangea-7271909.jpg",
+    ],
+  },
 ];
 
 /** Format IDR currency: 150000 → "Rp 150.000" */
