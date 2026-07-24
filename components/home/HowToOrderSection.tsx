@@ -125,13 +125,13 @@ export default function HowToOrderSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white overflow-hidden"
+      className="relative bg-white"
     >
-      {/* This wrapper is the viewport window */}
-      <div className="h-screen flex flex-col justify-center overflow-hidden">
+      {/* Viewport-height container — pinned by GSAP, content top-aligned */}
+      <div className="h-screen flex flex-col overflow-hidden">
 
-        {/* Heading — stays visible above the scrolling track */}
-        <div ref={headingRef} className="flex-shrink-0 px-10 pt-16 pb-10">
+        {/* Heading — sits at top, no vertical centering gap */}
+        <div ref={headingRef} className="flex-shrink-0 px-10 pt-16 pb-8">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-bloom-secondary mb-2">
             Cara Pesan
           </p>
@@ -140,56 +140,58 @@ export default function HowToOrderSection() {
           </h2>
         </div>
 
-        {/* Horizontal scrolling track */}
-        <div
-          ref={trackRef}
-          className="flex gap-6 px-10 pb-16 flex-shrink-0"
-          style={{ width: 'max-content' }}
-        >
-          {STEPS.map((step, i) => (
-            <div
-              key={i}
-              className={`how-card flex-shrink-0 w-[min(380px,85vw)] rounded-3xl bg-gradient-to-br ${step.color} border border-bloom-border/60 p-9 flex flex-col gap-6 shadow-card`}
-            >
-              {/* Step number */}
-              <div className="flex items-center justify-between">
-                <span
-                  className="text-5xl font-black tracking-tight"
-                  style={{ color: step.accent, opacity: 0.18 }}
-                >
-                  {step.number}
-                </span>
-                <span style={{ color: step.accent }}>{step.icon}</span>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 flex flex-col gap-3">
-                <h3 className="text-xl font-bold text-bloom-text tracking-tight">
-                  {step.title}
-                </h3>
-                <p className="text-sm text-bloom-secondary leading-relaxed">
-                  {step.description}
-                </p>
-              </div>
-
-              {/* Step indicator dots */}
-              <div className="flex gap-2 mt-auto">
-                {STEPS.map((_, j) => (
+        {/* Horizontal scrolling track — fills remaining height */}
+        <div className="flex-1 flex items-center overflow-hidden">
+          <div
+            ref={trackRef}
+            className="flex gap-6 px-10 pb-10 flex-shrink-0"
+            style={{ width: 'max-content' }}
+          >
+            {STEPS.map((step, i) => (
+              <div
+                key={i}
+                className={`how-card flex-shrink-0 w-[min(380px,85vw)] rounded-3xl bg-gradient-to-br ${step.color} border border-bloom-border/60 p-9 flex flex-col gap-6 shadow-card`}
+              >
+                {/* Step number */}
+                <div className="flex items-center justify-between">
                   <span
-                    key={j}
-                    className="h-1.5 rounded-full transition-all duration-300"
-                    style={{
-                      width: j === i ? '24px' : '6px',
-                      background: j === i ? step.accent : '#D2D2D7',
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+                    className="text-5xl font-black tracking-tight"
+                    style={{ color: step.accent, opacity: 0.18 }}
+                  >
+                    {step.number}
+                  </span>
+                  <span style={{ color: step.accent }}>{step.icon}</span>
+                </div>
 
-          {/* Trailing spacer so last card isn't flush with edge */}
-          <div className="w-10 flex-shrink-0" />
+                {/* Content */}
+                <div className="flex-1 flex flex-col gap-3">
+                  <h3 className="text-xl font-bold text-bloom-text tracking-tight">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-bloom-secondary leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+
+                {/* Step indicator dots */}
+                <div className="flex gap-2 mt-auto">
+                  {STEPS.map((_, j) => (
+                    <span
+                      key={j}
+                      className="h-1.5 rounded-full transition-all duration-300"
+                      style={{
+                        width: j === i ? '24px' : '6px',
+                        background: j === i ? step.accent : '#D2D2D7',
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Trailing spacer */}
+            <div className="w-10 flex-shrink-0" />
+          </div>
         </div>
       </div>
     </section>
