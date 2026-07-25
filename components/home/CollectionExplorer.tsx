@@ -2,11 +2,14 @@
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from '@/lib/gsap';
-import { products } from '@/lib/mockData';
 import { Product } from '@/types';
 import ProductDrawer from './ProductDrawer';
 
-export default function CollectionExplorer() {
+interface CollectionExplorerProps {
+  products: Product[];
+}
+
+export default function CollectionExplorer({ products }: CollectionExplorerProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const listRef    = useRef<HTMLUListElement>(null);

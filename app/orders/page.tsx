@@ -81,8 +81,8 @@ function OrderCard({ order }: { order: Order }) {
   const cfg              = STATUS_CFG[order.status];
   const buttons          = STATUS_NEXT_BTN[order.status] ?? [];
 
-  function handleTransition(to: OrderStatus) {
-    const result = updateStatus(order.id, to);
+  async function handleTransition(to: OrderStatus) {
+    const result = await updateStatus(order.id, to);
     showToast(result.message, result.success ? 'success' : 'error');
   }
 

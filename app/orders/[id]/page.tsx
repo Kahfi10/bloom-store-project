@@ -89,8 +89,8 @@ export default function OrderDetailPage() {
 
   if (!isLoggedIn || !order || !cfg) return null;
 
-  function handleTransition(to: OrderStatus) {
-    const result = updateStatus(orderId, to);
+  async function handleTransition(to: OrderStatus) {
+    const result = await updateStatus(orderId, to);
     showToast(result.message, result.success ? 'success' : 'error');
   }
 

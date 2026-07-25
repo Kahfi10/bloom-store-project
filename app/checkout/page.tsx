@@ -67,9 +67,8 @@ export default function CheckoutPage() {
     if (!validate()) return;
 
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 700));
 
-    const result = createOrder(items, form, totalPrice);
+    const result = await createOrder(items, form, totalPrice);
     setLoading(false);
 
     if (!result.success || !result.order) {
