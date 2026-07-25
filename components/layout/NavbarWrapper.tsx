@@ -6,6 +6,6 @@ import Navbar from './Navbar';
 /** Renders the Navbar only on the home page (/). All other pages are navbar-free. */
 export default function NavbarWrapper() {
   const pathname = usePathname();
-  if (pathname !== '/') return null;
+  if (pathname !== '/' || pathname.startsWith('/admin')) return null;
   return <Navbar />;
 }

@@ -5,7 +5,7 @@ import { ToastProvider } from '@/context/ToastContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { OrderProvider } from '@/context/OrderContext';
 import NavbarWrapper from '@/components/layout/NavbarWrapper';
-import Footer from '@/components/layout/Footer';
+import FooterWrapper from '@/components/layout/FooterWrapper';
 
 export const metadata: Metadata = {
   title: 'Bloom Store — Toko Bunga Premium',
@@ -28,7 +28,7 @@ export default function RootLayout({
               <ToastProvider>
                 <NavbarWrapper />
                 <main>{children}</main>
-                <Footer />
+                <FooterWrapper />
               </ToastProvider>
             </OrderProvider>
           </CartProvider>

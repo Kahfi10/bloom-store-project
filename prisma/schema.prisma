@@ -63,3 +63,14 @@ model OrderItem {
   order     Order   @relation(fields: [orderId],   references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id])
 }
+
+// ─── UserSession (lacak login customer) ────────────────────────────────────
+model UserSession {
+  id        String    @id @default(cuid())
+  userId    Int
+  userName  String
+  userEmail String
+  loginAt   DateTime  @default(now())
+  logoutAt  DateTime?
+  isActive  Boolean   @default(true)
+}
