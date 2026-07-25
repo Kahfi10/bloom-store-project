@@ -9,6 +9,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:bdd": "cross-env TS_NODE_PROJECT=tsconfig.cucumber.json cucumber-js",
+    "test:bdd:report": "cross-env TS_NODE_PROJECT=tsconfig.cucumber.json cucumber-js --format html:cucumber-report.html",
     "db:migrate": "prisma migrate dev",
     "db:seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
     "db:studio": "prisma studio",
@@ -27,12 +29,14 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^12.9.0",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "jest": "^30.4.2",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.12",
