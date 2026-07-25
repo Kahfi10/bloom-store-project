@@ -10,6 +10,7 @@ import { useOrder } from '@/context/OrderContext';
 import { useToast } from '@/context/ToastContext';
 import { formatRupiah } from '@/lib/mockData';
 import { ShippingInfo } from '@/types';
+import BackButton from '@/components/ui/BackButton';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -95,6 +96,7 @@ export default function CheckoutPage() {
 
         {/* Header */}
         <div className="mb-8 animate-fade-up">
+          <BackButton href="/cart" label="Kembali ke Keranjang" className="mb-4" />
           <nav className="flex items-center gap-2 text-sm text-bloom-secondary mb-4">
             <Link href="/" className="hover:text-bloom-text transition-colors">Beranda</Link>
             <span>/</span>

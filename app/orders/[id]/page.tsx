@@ -9,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { formatRupiah } from '@/lib/mockData';
 import { OrderStatus } from '@/types';
+import BackButton from '@/components/ui/BackButton';
 
 // ─── Status config ──────────────────────────────────────────────────────────
 const STATUS_CFG: Record<OrderStatus, { label: string; bg: string; text: string; dot: string; desc: string }> = {
@@ -103,14 +104,17 @@ export default function OrderDetailPage() {
     <div className="min-h-screen bg-bloom-bg pt-20">
       <div className="max-w-[860px] mx-auto px-6 py-10">
 
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-bloom-secondary mb-8 animate-fade-up">
-          <Link href="/" className="hover:text-bloom-text transition-colors">Beranda</Link>
-          <span>/</span>
-          <Link href="/orders" className="hover:text-bloom-text transition-colors">Pesanan Saya</Link>
-          <span>/</span>
-          <span className="text-bloom-text font-mono font-semibold truncate">{order.id}</span>
-        </nav>
+        {/* Back + Breadcrumb */}
+        <div className="mb-8 animate-fade-up space-y-2">
+          <BackButton href="/orders" label="Pesanan Saya" />
+          <nav className="flex items-center gap-2 text-sm text-bloom-secondary">
+            <Link href="/" className="hover:text-bloom-text transition-colors">Beranda</Link>
+            <span>/</span>
+            <Link href="/orders" className="hover:text-bloom-text transition-colors">Pesanan Saya</Link>
+            <span>/</span>
+            <span className="text-bloom-text font-mono font-semibold truncate">{order.id}</span>
+          </nav>
+        </div>
 
         <div className="space-y-5 animate-fade-up">
 

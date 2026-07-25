@@ -4,6 +4,7 @@ import { getAllProducts, getProductBySlug } from '@/lib/products';
 import { formatRupiah } from '@/lib/mockData';
 import ImageGallery from '@/components/product/ImageGallery';
 import AddToCartWidget from '@/components/product/AddToCartWidget';
+import BackButton from '@/components/ui/BackButton';
 
 // Pre-generate all product slugs at build time
 export async function generateStaticParams() {
@@ -118,13 +119,7 @@ export default async function ProductDetailPage({
 
             <div className="h-px bg-bloom-border" />
             <AddToCartWidget product={product} />
-
-            <Link href="/#produk" className="inline-flex items-center gap-1.5 text-sm text-bloom-secondary hover:text-bloom-text transition-colors group">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-0.5 transition-transform duration-200">
-                <path d="M9 2.5L4.5 7 9 11.5" />
-              </svg>
-              Kembali ke semua produk
-            </Link>
+            <BackButton href="/#produk" label="Kembali ke semua produk" />
           </div>
         </div>
 

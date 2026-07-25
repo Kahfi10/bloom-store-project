@@ -8,6 +8,7 @@ import { useToast } from '@/context/ToastContext';
 import { useAuth } from '@/context/AuthContext';
 import { formatRupiah } from '@/lib/mockData';
 import { CartItem } from '@/types';
+import BackButton from '@/components/ui/BackButton';
 
 // ─── Single cart row ────────────────────────────────────────────────────────
 function CartRow({ item, onQtyChange, onRemove }: {
@@ -132,6 +133,7 @@ export default function CartPage() {
 
         {/* Header */}
         <div className="mb-8 animate-fade-up">
+          <BackButton href="/#produk" label="Lanjut Belanja" className="mb-4" />
           <h1 className="text-[clamp(1.6rem,4vw,2.2rem)] font-bold text-bloom-text tracking-tight">
             Keranjang Belanja
           </h1>
