@@ -10,6 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ─── User (akun customer & admin) ──────────────────────────────────────────
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  username  String   @unique
+  email     String   @unique
+  password  String   // bcrypt hash
+  role      String   @default("customer") // "customer" | "admin"
+  createdAt DateTime @default(now())
+}
+
 // ─── Product ───────────────────────────────────────────────────────────────
 model Product {
   id              Int         @id @default(autoincrement())

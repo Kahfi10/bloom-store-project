@@ -12,7 +12,7 @@ export default function Navbar() {
   const [scrolled, setScrolled]     = useState(false);
   const [menuOpen, setMenuOpen]     = useState(false);
   const { totalItems }              = useCart();
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn, user, logout, isAdmin } = useAuth();
   const menuRef                     = useRef<HTMLDivElement>(null);
 
   // On non-home pages the navbar is always "frosted" (no hero behind it)
@@ -142,11 +142,29 @@ export default function Navbar() {
 
               {/* Dropdown */}
               {menuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-bloom-border rounded-xl shadow-lg overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-bloom-border rounded-xl shadow-lg overflow-hidden">
                   <div className="px-4 py-3 border-b border-bloom-border">
                     <p className="text-xs text-bloom-secondary">Masuk sebagai</p>
                     <p className="text-sm font-semibold text-bloom-text truncate">{user.name}</p>
+                    {isAdmin && (
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-bloom-text text-white text-[10px] font-bold rounded-full uppercase tracking-wider">
+                        Admin
+                      </span>
+                    )}
                   </div>
+
+                  {/* Admin Panel link — only for admin */}
+                  {isAdmin && (
+                    <Link href="/admin" onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-bloom-text bg-bloom-surface hover:bg-bloom-border/40 transition-colors border-b border-bloom-border">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                      </svg>
+                      Panel Admin
+                    </Link>
+                  )}
+
                   <Link href="/orders" onClick={() => setMenuOpen(false)}
                     className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-bloom-text hover:bg-bloom-surface transition-colors">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">

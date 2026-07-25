@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -224,6 +225,33 @@ async function main() {
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.product.deleteMany();
+  await prisma.user.deleteMany();
+
+  // ── Seed users ─────────────────────────────────────────────────────────
+  const adminHash = await bcrypt.hash('admin123', 10);
+  const userHash  = await bcrypt.hash('user123',  10);
+
+  await prisma.user.createMany({
+    data: [
+      {
+        id:       1,
+        name:     'Admin Bloom',
+        username: 'admin',
+        email:    'admin@bloom.com',
+        password: adminHash,
+        role:     'admin',
+      },
+      {
+        id:       2,
+        name:     'Pengguna Demo',
+        username: 'user',
+        email:    'user@bloom.com',
+        password: userHash,
+        role:     'customer',
+      },
+    ],
+  });
+  console.log('✅ Seeded 2 users (admin + demo)');
 
   // Insert products
   for (const product of products) {
