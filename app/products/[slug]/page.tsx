@@ -1,227 +1,151 @@
-﻿'use client';
-
+﻿import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useOrder, VALID_TRANSITIONS } from '@/context/OrderContext';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/context/ToastContext';
+import { getAllProducts, getProductBySlug } from '@/lib/products';
 import { formatRupiah } from '@/lib/mockData';
-import { Order, OrderStatus } from '@/types';
+import ImageGallery from '@/components/product/ImageGallery';
+import AddToCartWidget from '@/components/product/AddToCartWidget';
 import BackButton from '@/components/ui/BackButton';
 
-// â”€â”€â”€ Status config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const STATUS_CFG: Record<OrderStatus, { label: string; bg: string; text: string; dot: string }> = {
-  DRAFT:     { label: 'Draft',     bg: 'bg-gray-100',   text: 'text-gray-600',       dot: 'bg-gray-400' },
-  CONFIRMED: { label: 'Confirmed', bg: 'bg-blue-50',    text: 'text-blue-700',       dot: 'bg-blue-500' },
-  COMPLETED: { label: 'Completed', bg: 'bg-green-50',   text: 'text-bloom-success',  dot: 'bg-bloom-success' },
-  CANCELLED: { label: 'Cancelled', bg: 'bg-red-50',     text: 'text-bloom-danger',   dot: 'bg-bloom-danger' },
-};
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.map((p) => ({ slug: p.slug }));
+}
 
-const STATUS_NEXT_BTN: Partial<Record<OrderStatus, { to: OrderStatus; label: string; cls: string }[]>> = {
-  DRAFT: [
-    { to: 'CONFIRMED', label: 'Konfirmasi',  cls: 'bg-blue-600 text-white hover:bg-blue-700' },
-    { to: 'CANCELLED', label: 'Batalkan',    cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
-  ],
-  CONFIRMED: [
-    { to: 'COMPLETED', label: 'Selesaikan',  cls: 'bg-bloom-success text-white hover:opacity-90' },
-    { to: 'CANCELLED', label: 'Batalkan',    cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
-  ],
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+  if (!product) return { title: 'Produk tidak ditemukan' };
+  return {
+    title: `${product.name} — Bloom Store`,
+    description: product.description,
+  };
+}
 
-// â”€â”€â”€ Timeline component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function StatusTimeline({ current }: { current: OrderStatus }) {
-  const steps: OrderStatus[] = ['DRAFT', 'CONFIRMED', 'COMPLETED'];
-  const cancelled = current === 'CANCELLED';
-  const currentIdx = steps.indexOf(current);
-
+function StockBadge({ stock }: { stock: number }) {
+  if (stock === 0)
+    return (
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-xs font-semibold text-bloom-danger">
+        <span className="w-1.5 h-1.5 rounded-full bg-bloom-danger" />
+        Stok Habis
+      </span>
+    );
+  if (stock <= 4)
+    return (
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-semibold text-bloom-warning">
+        <span className="w-1.5 h-1.5 rounded-full bg-bloom-warning stock-dot-low" />
+        Sisa {stock} unit
+      </span>
+    );
   return (
-    <div className="flex items-center gap-0">
-      {steps.map((step, i) => {
-        const done    = cancelled ? false : i < currentIdx;
-        const active  = !cancelled && i === currentIdx;
-        const pending = cancelled || i > currentIdx;
-        const cfg     = STATUS_CFG[step];
-
-        return (
-          <div key={step} className="flex items-center flex-1 last:flex-none">
-            <div className="flex flex-col items-center gap-1">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
-                ${done   ? 'bg-bloom-text border-bloom-text text-white' : ''}
-                ${active ? 'bg-white border-bloom-text text-bloom-text shadow-sm' : ''}
-                ${pending? 'bg-bloom-surface border-bloom-border text-bloom-secondary' : ''}`}>
-                {done
-                  ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M2 6l3 3 5-5"/></svg>
-                  : i + 1}
-              </div>
-              <span className={`text-xs font-medium whitespace-nowrap
-                ${active ? 'text-bloom-text' : 'text-bloom-secondary'}`}>
-                {cfg.label}
-              </span>
-            </div>
-            {i < steps.length - 1 && (
-              <div className={`flex-1 h-0.5 mx-1 mb-4 rounded transition-all ${done ? 'bg-bloom-text' : 'bg-bloom-border'}`} />
-            )}
-          </div>
-        );
-      })}
-      {cancelled && (
-        <div className="ml-4 flex items-center gap-1.5 px-3 py-1 bg-red-50 border border-red-200 rounded-full">
-          <span className="w-1.5 h-1.5 rounded-full bg-bloom-danger" />
-          <span className="text-xs font-semibold text-bloom-danger">Dibatalkan</span>
-        </div>
-      )}
-    </div>
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200 text-xs font-semibold text-bloom-success">
+      <span className="w-1.5 h-1.5 rounded-full bg-bloom-success" />
+      Tersedia — {stock} unit
+    </span>
   );
 }
 
-// â”€â”€â”€ Single order card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function OrderCard({ order }: { order: Order }) {
-  const { updateStatus } = useOrder();
-  const { showToast }    = useToast();
-  const cfg              = STATUS_CFG[order.status];
-  const buttons          = STATUS_NEXT_BTN[order.status] ?? [];
+export default async function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug }  = await params;
+  const product   = await getProductBySlug(slug);
+  if (!product) notFound();
 
-  async function handleTransition(to: OrderStatus) {
-    const result = await updateStatus(order.id, to);
-    showToast(result.message, result.success ? 'success' : 'error');
-  }
-
-  const createdDate = new Date(order.createdAt).toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
-  });
+  const allProducts = await getAllProducts();
+  const related     = allProducts.filter((p) => p.id !== product.id).slice(0, 4);
 
   return (
-    <div className="bg-white rounded-2xl border border-bloom-border shadow-card overflow-hidden">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-bloom-border/60 bg-bloom-surface/50">
-        <div>
-          <div className="flex items-center gap-3">
-            <Link href={`/orders/${order.id}`}
-              className="text-sm font-bold text-bloom-text hover:opacity-70 transition-opacity font-mono tracking-tight">
-              {order.id}
-            </Link>
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-              {cfg.label}
-            </span>
-          </div>
-          <p className="text-xs text-bloom-secondary mt-0.5">{createdDate}</p>
-        </div>
-        <p className="text-base font-bold text-bloom-text">{formatRupiah(order.totalPrice)}</p>
-      </div>
+    <div className="min-h-screen bg-bloom-bg">
+      <div className="max-w-[1200px] mx-auto px-6 pt-28 pb-20">
 
-      {/* Body */}
-      <div className="px-6 py-4 space-y-4">
-        {/* Timeline */}
-        <StatusTimeline current={order.status} />
-
-        {/* Items summary */}
-        <div className="flex flex-wrap gap-2 text-xs text-bloom-secondary">
-          {order.items.map(({ product, qty }) => (
-            <span key={product.id} className="px-2.5 py-1 bg-bloom-surface border border-bloom-border rounded-full">
-              {product.name} Ã—{qty}
-            </span>
-          ))}
-        </div>
-
-        {/* Recipient */}
-        <div className="flex items-center gap-2 text-sm text-bloom-secondary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
-            <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm text-bloom-secondary mb-10 animate-fade-up">
+          <Link href="/" className="hover:text-bloom-text transition-colors">Beranda</Link>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <path d="M4.5 2.5L7.5 6l-3 3.5" />
           </svg>
-          <span className="truncate">
-            <strong className="text-bloom-text">{order.shipping.recipientName}</strong>
-            {' â€” '}{order.shipping.shippingAddress}
-          </span>
-        </div>
-      </div>
+          <Link href="/#produk" className="hover:text-bloom-text transition-colors">Produk</Link>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <path d="M4.5 2.5L7.5 6l-3 3.5" />
+          </svg>
+          <span className="text-bloom-text font-medium truncate max-w-[200px]">{product.name}</span>
+        </nav>
 
-      {/* Action buttons */}
-      {buttons.length > 0 && (
-        <div className="flex items-center gap-3 px-6 py-4 border-t border-bloom-border/60 bg-bloom-surface/30">
-          {buttons.map((btn) => (
-            <button key={btn.to} onClick={() => handleTransition(btn.to)}
-              className={`h-9 px-5 rounded-pill text-sm font-semibold btn-press transition-all ${btn.cls}`}>
-              {btn.label}
-            </button>
-          ))}
-          <Link href={`/orders/${order.id}`}
-            className="ml-auto text-xs text-bloom-secondary hover:text-bloom-text transition-colors">
-            Detail â†’
-          </Link>
-        </div>
-      )}
+        {/* Main 2-col */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
 
-      {/* Locked state */}
-      {VALID_TRANSITIONS[order.status].length === 0 && (
-        <div className="flex items-center justify-between px-6 py-3 border-t border-bloom-border/60 bg-bloom-surface/30">
-          <p className="text-xs text-bloom-secondary italic">
-            {order.status === 'COMPLETED' ? 'Pesanan selesai â€” tidak dapat diubah.' : 'Pesanan dibatalkan â€” tidak dapat diaktifkan kembali.'}
-          </p>
-          <Link href={`/orders/${order.id}`}
-            className="text-xs text-bloom-secondary hover:text-bloom-text transition-colors">
-            Detail â†’
-          </Link>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-export default function OrdersPage() {
-  const router   = useRouter();
-  const { isLoggedIn } = useAuth();
-  const { orders }     = useOrder();
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.replace('/login');
-    }
-  }, [isLoggedIn, router]);
-
-  if (!isLoggedIn) return null;
-
-  return (
-    <div className="min-h-screen bg-bloom-bg pt-20">
-      <div className="max-w-[900px] mx-auto px-6 py-10">
-
-        {/* Header */}
-        <div className="mb-8 animate-fade-up">
-          <BackButton href="/" label="Beranda" className="mb-4" />
-          <h1 className="text-[clamp(1.6rem,4vw,2.2rem)] font-bold text-bloom-text tracking-tight">
-            Pesanan Saya
-          </h1>
-          <p className="text-sm text-bloom-secondary mt-1">
-            {orders.length > 0 ? `${orders.length} pesanan ditemukan` : 'Belum ada pesanan'}
-          </p>
-        </div>
-
-        {orders.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center space-y-4 animate-fade-up">
-            <div className="w-20 h-20 rounded-full bg-bloom-surface flex items-center justify-center">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="1.4" strokeLinecap="round" className="text-bloom-secondary">
-                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-                <rect x="9" y="3" width="6" height="4" rx="1"/>
-                <path d="M9 12h6M9 16h4"/>
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold text-bloom-text">Belum Ada Pesanan</h2>
-            <p className="text-sm text-bloom-secondary max-w-xs">
-              Mulai berbelanja dan buat pesanan pertamamu sekarang!
-            </p>
-            <Link href="/#produk"
-              className="mt-2 inline-flex items-center gap-2 h-11 px-7 bg-bloom-text text-white text-sm font-semibold rounded-pill btn-press hover:bg-black/80 transition-all">
-              Mulai Belanja
-            </Link>
+          {/* LEFT — Gallery */}
+          <div className="animate-fade-up">
+            <ImageGallery images={product.images} name={product.name} />
           </div>
-        ) : (
-          <div className="space-y-5 animate-fade-up">
-            {orders.map((order) => (
-              <OrderCard key={order.id} order={order} />
-            ))}
+
+          {/* RIGHT — Info */}
+          <div className="flex flex-col gap-6 animate-fade-up" style={{ animationDelay: '80ms' }}>
+
+            <div className="space-y-3">
+              <span className="inline-block px-3 py-1 bg-bloom-surface border border-bloom-border rounded-full text-xs font-semibold text-bloom-secondary tracking-wide uppercase">
+                {product.category}
+              </span>
+              <h1 className="text-[clamp(1.8rem,4vw,2.6rem)] font-bold text-bloom-text tracking-tight leading-tight">
+                {product.name}
+              </h1>
+            </div>
+
+            <StockBadge stock={product.stock} />
+
+            <div className="h-px bg-bloom-border" />
+
+            <div className="space-y-2">
+              <h2 className="text-xs font-semibold text-bloom-secondary uppercase tracking-widest">Deskripsi</h2>
+              <p className="text-[15px] text-bloom-text leading-relaxed">{product.description}</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: 'Kategori',   value: product.category },
+                { label: 'Stok',       value: `${product.stock} unit` },
+                { label: 'Kondisi',    value: 'Segar & Baru' },
+                { label: 'Pengiriman', value: 'Hari yang sama' },
+              ].map(({ label, value }) => (
+                <div key={label} className="px-4 py-3 bg-bloom-surface rounded-xl border border-bloom-border/60">
+                  <p className="text-xs font-medium text-bloom-secondary uppercase tracking-wider mb-0.5">{label}</p>
+                  <p className="text-sm font-semibold text-bloom-text">{value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="h-px bg-bloom-border" />
+
+            <AddToCartWidget product={product} />
+
+            <BackButton href="/#produk" label="Kembali ke semua produk" />
+          </div>
+        </div>
+
+        {/* Related products */}
+        {related.length > 0 && (
+          <div className="mt-20 pt-12 border-t border-bloom-border">
+            <h2 className="text-xl font-bold text-bloom-text mb-6">Produk Lainnya</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {related.map((r) => (
+                <Link key={r.id} href={`/products/${r.slug}`} className="group flex flex-col gap-2">
+                  <div className="relative aspect-square rounded-xl overflow-hidden bg-bloom-surface img-zoom-container">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={r.heroImage} alt={r.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-bloom-text group-hover:opacity-70 transition-opacity">{r.name}</p>
+                    <p className="text-xs text-bloom-secondary">{formatRupiah(r.price)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
       </div>
