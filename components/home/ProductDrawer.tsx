@@ -1,11 +1,11 @@
 'use client';
 
 import { useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/types';
-import { gsap } from '@/lib/gsap';
+import { gsap, ScrollTrigger } from '@/lib/gsap';
 import { formatRupiah } from '@/lib/mockData';
-import ImageGallery from '@/components/product/ImageGallery';
 import AddToCartWidget from '@/components/product/AddToCartWidget';
 
 interface ProductDrawerProps {
@@ -14,174 +14,318 @@ interface ProductDrawerProps {
   onClose: () => void;
 }
 
-function StockBadge({ stock }: { stock: number }) {
-  if (stock === 0)
-    return (
-      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-xs font-semibold text-bloom-danger">
-        <span className="w-1.5 h-1.5 rounded-full bg-bloom-danger" />
-        Stok Habis
-      </span>
-    );
-  if (stock <= 4)
-    return (
-      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-semibold text-bloom-warning">
-        <span className="w-1.5 h-1.5 rounded-full bg-bloom-warning" />
-        Sisa {stock} unit
-      </span>
-    );
+// ─── Fact card ──────────────────────────────────────────────────────────────
+function FactCard({
+  icon, label, value,
+}: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200 text-xs font-semibold text-bloom-success">
-      <span className="w-1.5 h-1.5 rounded-full bg-bloom-success" />
-      Tersedia — {stock} unit
-    </span>
+    <div className="flex flex-col gap-2 p-4 bg-white rounded-xl border border-bloom-border/60 shadow-sm">
+      <span className="text-bloom-secondary">{icon}</span>
+      <p className="text-[10px] font-semibold tracking-widest uppercase text-bloom-secondary">
+        {label}
+      </p>
+      <p className="text-sm font-semibold text-bloom-text leading-snug">{value}</p>
+    </div>
   );
 }
 
-export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawerProps) {
-  const drawerRef   = useRef<HTMLDivElement>(null);
-  const backdropRef = useRef<HTMLDivElement>(null);
-  const isAnimating = useRef(false);
+// ─── Section label ──────────────────────────────────────────────────────────
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-[10px] font-bold tracking-[0.25em] uppercase text-bloom-secondary mb-4">
+      {children}
+    </p>
+  );
+}
 
-  // ── Animate open / close ─────────────────────────────────────────────
+// ─── Main component ─────────────────────────────────────────────────────────
+export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawerProps) {
+  const drawerRef     = useRef<HTMLDivElement>(null);
+  const backdropRef   = useRef<HTMLDivElement>(null);
+  const bodyRef       = useRef<HTMLDivElement>(null);   // scrollable body
+  const heroImgRef    = useRef<HTMLDivElement>(null);   // parallax target
+
+  // ── Open / close animation ───────────────────────────────────────────
   useEffect(() => {
     const drawer   = drawerRef.current;
     const backdrop = backdropRef.current;
     if (!drawer || !backdrop) return;
 
     if (isOpen) {
-      isAnimating.current = true;
-      // Make visible before animating
       gsap.set(drawer, { display: 'flex' });
       gsap.set(backdrop, { display: 'block' });
-
-      gsap.to(backdrop, {
-        opacity: 1, duration: 0.3, ease: 'power2.out',
-        onComplete: () => { isAnimating.current = false; },
-      });
-      gsap.fromTo(drawer,
-        { x: '100%' },
-        { x: '0%', duration: 0.45, ease: 'power3.out' }
-      );
+      gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      gsap.fromTo(drawer,   { x: '100%' }, { x: '0%', duration: 0.45, ease: 'power3.out' });
       document.body.style.overflow = 'hidden';
     } else {
-      isAnimating.current = true;
-      gsap.to(backdrop, { opacity: 0, duration: 0.28, ease: 'power2.in' });
+      gsap.to(backdrop, { opacity: 0, duration: 0.25, ease: 'power2.in' });
       gsap.to(drawer, {
-        x: '100%',
-        duration: 0.36,
-        ease: 'power3.in',
+        x: '100%', duration: 0.36, ease: 'power3.in',
         onComplete: () => {
-          gsap.set(drawer, { display: 'none' });
+          gsap.set(drawer,   { display: 'none' });
           gsap.set(backdrop, { display: 'none' });
-          isAnimating.current = false;
         },
       });
       document.body.style.overflow = '';
     }
   }, [isOpen]);
 
+  // ── GSAP scroll effects inside drawer ────────────────────────────────
+  useEffect(() => {
+    if (!isOpen || !product || !bodyRef.current) return;
+
+    // Small delay so React finishes rendering drawer content
+    const timer = setTimeout(() => {
+      const body = bodyRef.current!;
+      const ctx  = gsap.context(() => {
+
+        // 1. Hero image parallax (moves up as user scrolls down)
+        if (heroImgRef.current) {
+          gsap.to(heroImgRef.current, {
+            yPercent: 18,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: heroImgRef.current,
+              scroller: body,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: true,
+            },
+          });
+        }
+
+        // 2. Generic scroll-reveal: every element with data-reveal
+        const reveals = body.querySelectorAll('[data-reveal]');
+        reveals.forEach((el) => {
+          gsap.from(el, {
+            y: 36, opacity: 0, duration: 0.65, ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              scroller: body,
+              start: 'top 92%',
+              toggleActions: 'play none none none',
+            },
+          });
+        });
+
+        // 3. Fact cards stagger
+        const facts = body.querySelectorAll('[data-fact]');
+        if (facts.length) {
+          gsap.from(facts, {
+            y: 28, opacity: 0, scale: 0.96,
+            duration: 0.55, ease: 'power2.out',
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: facts[0],
+              scroller: body,
+              start: 'top 92%',
+              toggleActions: 'play none none none',
+            },
+          });
+        }
+
+        ScrollTrigger.refresh();
+      }, body);
+
+      return () => ctx.revert();
+    }, 120);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, product]);
+
   // ── ESC key ───────────────────────────────────────────────────────────
   useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape' && isOpen) onClose();
-    }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && isOpen) onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
   // Cleanup on unmount
+  useEffect(() => () => { document.body.style.overflow = ''; }, []);
+
+  // Scroll body to top when product changes
   useEffect(() => {
-    return () => { document.body.style.overflow = ''; };
-  }, []);
+    if (isOpen && bodyRef.current) bodyRef.current.scrollTop = 0;
+  }, [product, isOpen]);
 
   return (
     <>
-      {/* ── Backdrop ──────────────────────────────────────────────── */}
+      {/* Backdrop */}
       <div
         ref={backdropRef}
         onClick={onClose}
-        className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-[2px]"
+        className="fixed inset-0 z-[60] bg-black/45 backdrop-blur-[3px]"
         style={{ display: 'none', opacity: 0 }}
         aria-hidden="true"
       />
 
-      {/* ── Drawer panel ──────────────────────────────────────────── */}
+      {/* Drawer */}
       <div
         ref={drawerRef}
         role="dialog"
         aria-modal="true"
-        aria-label={product ? `Detail ${product.name}` : 'Detail produk'}
-        className="fixed top-0 right-0 z-[70] h-full w-full max-w-[500px] bg-white shadow-2xl flex-col overflow-hidden"
+        aria-label={product ? `Mengenal ${product.name}` : 'Detail produk'}
+        className="fixed top-0 right-0 z-[70] h-full w-full max-w-[520px] bg-white shadow-2xl flex-col"
         style={{ display: 'none', transform: 'translateX(100%)' }}
       >
-        {/* ── Header ───────────────────────────────────────────────── */}
-        <div className="flex-shrink-0 flex items-center justify-between px-6 py-5 border-b border-bloom-border">
-          <div className="flex items-center gap-3">
-            {product && (
-              <span className="text-xs font-semibold tracking-wider uppercase text-bloom-secondary px-2.5 py-1 bg-bloom-surface rounded-full border border-bloom-border">
-                {product.category}
-              </span>
-            )}
-            <span className="text-sm font-semibold text-bloom-text">
-              {product?.name ?? ''}
+        {/* ── Sticky header ─────────────────────────────────────────── */}
+        <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 bg-white/90 backdrop-blur-md border-b border-bloom-border z-10">
+          <div className="flex items-center gap-2.5">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-bloom-secondary bg-bloom-surface px-2.5 py-1 rounded-full border border-bloom-border">
+              {product?.category}
             </span>
           </div>
-
-          <button
-            onClick={onClose}
-            aria-label="Tutup panel"
-            className="w-9 h-9 rounded-full flex items-center justify-center text-bloom-secondary hover:text-bloom-text hover:bg-bloom-surface transition-all btn-press"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <path d="M3 3l10 10M13 3L3 13" />
+          <button onClick={onClose} aria-label="Tutup"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-bloom-secondary hover:text-bloom-text hover:bg-bloom-surface transition-all btn-press">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              <path d="M2 2l11 11M13 2L2 13" />
             </svg>
           </button>
         </div>
 
-        {/* ── Scrollable body ───────────────────────────────────────── */}
+        {/* ── Scrollable body ────────────────────────────────────────── */}
         {product && (
-          <div className="flex-1 overflow-y-auto">
-            <div className="p-6 space-y-6">
+          <div ref={bodyRef} className="flex-1 overflow-y-auto">
 
-              {/* Image gallery */}
-              <ImageGallery images={product.images} name={product.name} />
-
-              {/* Name + stock */}
-              <div className="space-y-3">
-                <h2 className="text-[1.6rem] font-bold text-bloom-text tracking-tight leading-tight">
+            {/* ── 1. Hero image — parallax ─────────────────────────── */}
+            <div className="relative h-[320px] overflow-hidden bg-bloom-surface">
+              <div ref={heroImgRef} className="absolute inset-0 scale-110">
+                <Image
+                  src={product.heroImage}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  sizes="520px"
+                  priority
+                />
+              </div>
+              {/* Gradient overlay for text legibility */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              <div className="absolute bottom-5 left-6 text-white">
+                <h2 className="text-3xl font-bold tracking-tight leading-none">
                   {product.name}
                 </h2>
-                <StockBadge stock={product.stock} />
+                <p className="text-sm text-white/70 mt-1 italic">
+                  {product.info.latinName}
+                </p>
               </div>
+            </div>
 
-              {/* Description */}
-              <p className="text-[15px] text-bloom-secondary leading-relaxed">
+            {/* ── 2. Intro ─────────────────────────────────────────── */}
+            <div className="px-6 py-7 border-b border-bloom-border" data-reveal>
+              <SectionLabel>Tentang Bunga Ini</SectionLabel>
+              <p className="text-[15px] text-bloom-text leading-relaxed">
                 {product.description}
               </p>
+              <div className="mt-4 flex items-start gap-2 p-3.5 bg-bloom-surface rounded-xl border border-bloom-border/60">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" className="text-bloom-secondary flex-shrink-0 mt-0.5">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                </svg>
+                <p className="text-xs text-bloom-secondary leading-relaxed">
+                  <span className="font-semibold text-bloom-text">Makna: </span>
+                  {product.info.meaning}
+                </p>
+              </div>
+            </div>
 
-              <div className="h-px bg-bloom-border" />
+            {/* ── 3. Sejarah ────────────────────────────────────────── */}
+            <div className="px-6 py-7 bg-bloom-surface border-b border-bloom-border" data-reveal>
+              <SectionLabel>Sejarah & Asal-usul</SectionLabel>
+              <p className="text-[14px] text-bloom-text leading-[1.75] whitespace-pre-line">
+                {product.info.history}
+              </p>
+            </div>
 
-              {/* Add to cart widget */}
+            {/* ── 4. Fakta Cards ────────────────────────────────────── */}
+            <div className="px-6 py-7 border-b border-bloom-border">
+              <SectionLabel>Fakta & Identitas</SectionLabel>
+              <div className="grid grid-cols-2 gap-3">
+                <div data-fact>
+                  <FactCard
+                    label="Asal"
+                    value={product.info.origin}
+                    icon={
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                        <circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                      </svg>
+                    }
+                  />
+                </div>
+                <div data-fact>
+                  <FactCard
+                    label="Nama Latin"
+                    value={product.info.latinName}
+                    icon={
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                        <path d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20" /><path d="M12 2a15.3 15.3 0 010 20" />
+                      </svg>
+                    }
+                  />
+                </div>
+                <div data-fact>
+                  <FactCard
+                    label="Musim Mekar"
+                    value={product.info.bloomSeason}
+                    icon={
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                        <circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                      </svg>
+                    }
+                  />
+                </div>
+                <div data-fact className="col-span-2">
+                  <div className="flex gap-3 p-4 bg-bloom-text text-white rounded-xl">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className="flex-shrink-0 mt-0.5 opacity-70">
+                      <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
+                    </svg>
+                    <div>
+                      <p className="text-[10px] font-bold tracking-widest uppercase opacity-60 mb-1">Fakta Menarik</p>
+                      <p className="text-sm leading-snug">{product.info.funFact}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ── 5. Gallery hint ───────────────────────────────────── */}
+            <div className="px-6 py-7 border-b border-bloom-border" data-reveal>
+              <SectionLabel>Galeri Foto ({product.images.length} foto)</SectionLabel>
+              <div className="flex gap-2.5 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden">
+                {product.images.map((src, i) => (
+                  <div
+                    key={i}
+                    className="relative w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-bloom-surface img-zoom-container"
+                  >
+                    <Image src={src} alt={`${product.name} ${i + 1}`} fill className="object-cover" sizes="96px" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── 6. Purchase section ───────────────────────────────── */}
+            <div className="px-6 py-7" data-reveal>
+              <SectionLabel>Dapatkan Sekarang</SectionLabel>
               <AddToCartWidget product={product} />
+            </div>
 
-              <div className="h-px bg-bloom-border" />
-
-              {/* Full detail link */}
+            {/* ── 7. Full detail link ───────────────────────────────── */}
+            <div className="px-6 pb-10">
               <Link
                 href={`/products/${product.slug}`}
                 onClick={onClose}
-                className="flex items-center justify-between group w-full py-3 text-sm font-medium text-bloom-secondary hover:text-bloom-text transition-colors"
+                className="flex items-center justify-between group w-full py-4 px-5 rounded-2xl border border-bloom-border hover:border-bloom-text hover:bg-bloom-surface transition-all duration-200"
               >
-                <span>Lihat halaman detail lengkap</span>
-                <svg
-                  width="16" height="16" viewBox="0 0 16 16" fill="none"
-                  stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"
-                  className="group-hover:translate-x-1 transition-transform duration-200"
-                >
-                  <path d="M3 8h10M8 3l5 5-5 5" />
+                <div>
+                  <p className="text-sm font-semibold text-bloom-text">Lihat halaman detail lengkap</p>
+                  <p className="text-xs text-bloom-secondary mt-0.5">Galeri interaktif & informasi lengkap</p>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"
+                  className="text-bloom-secondary group-hover:translate-x-1 group-hover:text-bloom-text transition-all duration-200">
+                  <path d="M3 9h12M9 3l6 6-6 6" />
                 </svg>
               </Link>
             </div>
+
           </div>
         )}
       </div>

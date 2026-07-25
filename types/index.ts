@@ -1,3 +1,13 @@
+// ─── Flower Info (story panel) ─────────────────────────────────────────────
+export interface FlowerInfo {
+  origin: string;       // Asal daerah / negara
+  latinName: string;    // Nama latin / ilmiah
+  meaning: string;      // Makna simbolis
+  history: string;      // Paragraf sejarah singkat
+  funFact: string;      // Fakta menarik
+  bloomSeason: string;  // Musim / kondisi mekar
+}
+
 // ─── Product ───────────────────────────────────────────────────────────────
 export interface Product {
   id: number;
@@ -9,6 +19,7 @@ export interface Product {
   description: string;
   heroImage: string; // first image, used on product cards
   images: string[];  // all images, used on product detail gallery
+  info: FlowerInfo;  // flower story data
 }
 
 // ─── Cart ──────────────────────────────────────────────────────────────────
