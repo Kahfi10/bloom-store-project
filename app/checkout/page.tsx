@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useRef, FormEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -21,6 +21,9 @@ export default function CheckoutPage() {
 
   const items = Object.values(cart);
 
+  // BUG-14 fix: track submission to prevent empty-cart guard from overriding redirect
+  const submittedRef = useRef(false);
+
   const [form, setForm] = useState<ShippingInfo>({
     recipientName: user?.name ?? '',
     shippingAddress: '',
@@ -29,28 +32,28 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<Partial<ShippingInfo & { form: string }>>({});
   const [loading, setLoading] = useState(false);
 
-  // Keep recipientName in sync when user changes
+  // BUG-23 fix: add form.recipientName to deps
   useEffect(() => {
     if (user?.name && !form.recipientName) {
       setForm((f) => ({ ...f, recipientName: user.name }));
     }
-  }, [user]);
+  }, [user, form.recipientName]);
 
-  // Guard: not logged in
+  // BUG-22 fix: add router + showToast to deps
   useEffect(() => {
     if (!isLoggedIn) {
       showToast('Silakan masuk terlebih dahulu.', 'error');
       router.replace('/login');
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, showToast, router]);
 
-  // Guard: empty cart
+  // BUG-14 + BUG-22 fix: skip guard if order was just submitted
   useEffect(() => {
-    if (isLoggedIn && totalItems === 0) {
+    if (isLoggedIn && totalItems === 0 && !submittedRef.current) {
       showToast('Keranjang kosong.', 'error');
       router.replace('/cart');
     }
-  }, [totalItems, isLoggedIn]);
+  }, [totalItems, isLoggedIn, showToast, router]);
 
   function validate(): boolean {
     const e: typeof errors = {};
@@ -68,7 +71,6 @@ export default function CheckoutPage() {
     if (!validate()) return;
 
     setLoading(true);
-
     const result = await createOrder(items, form, totalPrice);
     setLoading(false);
 
@@ -78,6 +80,8 @@ export default function CheckoutPage() {
       return;
     }
 
+    // BUG-14 fix: mark as submitted BEFORE clearCart to suppress the empty-cart guard
+    submittedRef.current = true;
     clearCart();
     showToast(`Pesanan ${result.order.id} berhasil dibuat!`, 'success');
     router.push(`/orders/${result.order.id}`);
@@ -88,7 +92,7 @@ export default function CheckoutPage() {
     setErrors((e) => ({ ...e, [field]: undefined }));
   }
 
-  if (!isLoggedIn || totalItems === 0) return null;
+  if (!isLoggedIn || (totalItems === 0 && !submittedRef.current)) return null;
 
   return (
     <div className="min-h-screen bg-bloom-bg pt-20">

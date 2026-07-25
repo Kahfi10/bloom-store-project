@@ -16,11 +16,14 @@ export default function AdminProductsPage() {
   const [deleting, setDeleting] = useState<number | null>(null);
 
   const fetchProducts = useCallback(async () => {
-    const url = search ? `/api/products?search=${encodeURIComponent(search)}` : '/api/products';
-    const res  = await fetch(url);
-    const data = await res.json();
-    if (data.success) setProducts(data.data);
-    setLoading(false);
+    try {
+      const url  = search ? `/api/products?search=${encodeURIComponent(search)}` : '/api/products';
+      const res  = await fetch(url);
+      const data = await res.json();
+      if (data.success) setProducts(data.data);
+    } catch { /* silent — loading indicator already handles this */ } finally {
+      setLoading(false);
+    }
   }, [search]);
 
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
@@ -28,11 +31,13 @@ export default function AdminProductsPage() {
   async function handleDelete(id: number, name: string) {
     if (!confirm(`Hapus produk "${name}"? Tindakan ini tidak dapat dibatalkan.`)) return;
     setDeleting(id);
-    const res  = await fetch(`/api/products/${id}`, { method: 'DELETE' });
-    const data = await res.json();
-    if (data.success) fetchProducts();
-    else alert(data.message);
-    setDeleting(null);
+    try {
+      const res  = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) fetchProducts();
+      else alert(data.message);
+    } catch { alert('Terjadi kesalahan jaringan. Coba lagi.'); }
+    finally  { setDeleting(null); }
   }
 
   return (

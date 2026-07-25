@@ -1,15 +1,8 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  ReactNode,
-} from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { CartItem, Order, OrderStatus, ShippingInfo } from '@/types';
 
-// ─── Valid status transitions (PRD §Modul 5) ───────────────────────────────
 export const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   DRAFT:     ['CONFIRMED', 'CANCELLED'],
   CONFIRMED: ['COMPLETED', 'CANCELLED'],
@@ -17,51 +10,68 @@ export const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   CANCELLED: [],
 };
 
-// ─── Context type ───────────────────────────────────────────────────────────
+const STORAGE_KEY = 'bloom_orders';
+
 interface OrderContextType {
   orders: Order[];
-  createOrder: (
-    items: CartItem[],
-    shipping: ShippingInfo,
-    totalPrice: number
-  ) => Promise<{ success: boolean; message: string; order?: Order }>;
-  updateStatus: (
-    orderId: string,
-    newStatus: OrderStatus
-  ) => Promise<{ success: boolean; message: string }>;
+  createOrder: (items: CartItem[], shipping: ShippingInfo, totalPrice: number) =>
+    Promise<{ success: boolean; message: string; order?: Order }>;
+  updateStatus: (orderId: string, newStatus: OrderStatus) =>
+    Promise<{ success: boolean; message: string }>;
   getOrder: (orderId: string) => Order | undefined;
 }
 
 const OrderContext = createContext<OrderContextType | null>(null);
 
-// ─── Map API response → frontend Order type ─────────────────────────────────
-function mapApiOrder(apiOrder: Record<string, unknown>, originalItems: CartItem[]): Order {
+// BUG-21 fix: map API response to frontend Order, using API items not stale cart items
+function mapApiOrder(apiOrder: Record<string, unknown>, fallbackItems: CartItem[]): Order {
+  // Prefer API-returned items (server-verified prices); fall back to cart items
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const apiItems = (apiOrder.items as any[]) ?? [];
+  const mappedItems: CartItem[] = apiItems.length > 0
+    ? apiItems.map((i) => ({
+        product: i.product,
+        qty:     i.qty,
+      }))
+    : fallbackItems;
+
   return {
     id:         apiOrder.id as string,
-    items:      originalItems,
+    items:      mappedItems,
     totalPrice: apiOrder.totalPrice as number,
     shipping: {
-      recipientName:   apiOrder.recipientName as string,
+      recipientName:   apiOrder.recipientName   as string,
       shippingAddress: apiOrder.shippingAddress as string,
-      phoneNumber:     apiOrder.phoneNumber as string,
+      phoneNumber:     apiOrder.phoneNumber     as string,
     },
     status:    apiOrder.status as OrderStatus,
     createdAt: apiOrder.createdAt as string,
   };
 }
 
-// ─── Provider ───────────────────────────────────────────────────────────────
 export function OrderProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>([]);
 
-  // ── Create order ──────────────────────────────────────────────────────────
+  // BUG-02 fix: hydrate from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) setOrders(JSON.parse(stored));
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
+
+  // Persist orders to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+    } catch { /* quota exceeded or private browsing */ }
+  }, [orders]);
+
+  // ── Create order ────────────────────────────────────────────────────────────
   const createOrder = useCallback(
-    async (
-      items: CartItem[],
-      shipping: ShippingInfo,
-      totalPrice: number
-    ): Promise<{ success: boolean; message: string; order?: Order }> => {
-      // Frontend validations before hitting API
+    async (items: CartItem[], shipping: ShippingInfo, totalPrice: number) => {
       if (!items.length)
         return { success: false, message: 'Keranjang kosong, tidak dapat membuat pesanan.' };
       if (!shipping.recipientName.trim())
@@ -72,25 +82,19 @@ export function OrderProvider({ children }: { children: ReactNode }) {
         return { success: false, message: 'Nomor telepon wajib diisi.' };
 
       try {
-        const res = await fetch('/api/orders', {
+        const res  = await fetch('/api/orders', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: items.map((i) => ({
-              productId: i.product.id,
-              qty:       i.qty,
-            })),
+          body:    JSON.stringify({
+            items: items.map((i) => ({ productId: i.product.id, qty: i.qty })),
             recipientName:   shipping.recipientName.trim(),
             shippingAddress: shipping.shippingAddress.trim(),
             phoneNumber:     shipping.phoneNumber.trim(),
           }),
         });
-
         const json = await res.json();
-
-        if (!res.ok || !json.success) {
+        if (!res.ok || !json.success)
           return { success: false, message: json.message ?? 'Gagal membuat pesanan.' };
-        }
 
         const order = mapApiOrder(json.data, items);
         setOrders((prev) => [order, ...prev]);
@@ -102,12 +106,9 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     []
   );
 
-  // ── Update status ─────────────────────────────────────────────────────────
+  // ── Update status ───────────────────────────────────────────────────────────
   const updateStatus = useCallback(
-    async (
-      orderId: string,
-      newStatus: OrderStatus
-    ): Promise<{ success: boolean; message: string }> => {
+    async (orderId: string, newStatus: OrderStatus) => {
       const order = orders.find((o) => o.id === orderId);
       if (!order) return { success: false, message: 'Pesanan tidak ditemukan.' };
 
@@ -121,18 +122,15 @@ export function OrderProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const res = await fetch(`/api/orders/${orderId}/status`, {
+        const res  = await fetch(`/api/orders/${orderId}/status`, {
           method:  'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({ status: newStatus }),
         });
         const json = await res.json();
-
-        if (!res.ok || !json.success) {
+        if (!res.ok || !json.success)
           return { success: false, message: json.message ?? 'Gagal memperbarui status.' };
-        }
 
-        // Update local state
         setOrders((prev) =>
           prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
         );
@@ -156,7 +154,6 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// ─── Hook ───────────────────────────────────────────────────────────────────
 export function useOrder(): OrderContextType {
   const ctx = useContext(OrderContext);
   if (!ctx) throw new Error('useOrder must be used within <OrderProvider>');

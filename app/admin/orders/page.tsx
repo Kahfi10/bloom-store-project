@@ -26,10 +26,12 @@ export default function AdminOrdersPage() {
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
   const fetchOrders = useCallback(async () => {
-    const res  = await fetch('/api/orders');
-    const data = await res.json();
-    if (data.success) { setOrders(data.data); setLastUpdate(new Date()); }
-    setLoading(false);
+    try {
+      const res  = await fetch('/api/orders');
+      const data = await res.json();
+      if (data.success) { setOrders(data.data); setLastUpdate(new Date()); }
+    } catch { /* network error — keep showing old data */ }
+    finally  { setLoading(false); }
   }, []);
 
   useEffect(() => {

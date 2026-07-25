@@ -54,11 +54,24 @@ export async function PATCH(
       );
     }
 
-    // Update status
-    const updated = await prisma.order.update({
-      where: { id },
-      data:  { status: newStatus },
-      include: { items: { include: { product: true } } },
+    // BUG-01 fix: use transaction to restore stock when order is CANCELLED
+    const updated = await prisma.$transaction(async (tx) => {
+      const result = await tx.order.update({
+        where: { id },
+        data:  { status: newStatus },
+        include: { items: { include: { product: true } } },
+      });
+
+      // Restore stock for all items when cancelling
+      if (newStatus === 'CANCELLED') {
+        for (const item of result.items) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data:  { stock: { increment: item.qty } },
+          });
+        }
+      }
+      return result;
     });
 
     return NextResponse.json({

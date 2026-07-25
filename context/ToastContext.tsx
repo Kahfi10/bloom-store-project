@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  ReactNode,
-} from 'react';
+import { createContext, useContext, useState, useCallback, useRef, useEffect, ReactNode } from 'react';
 import { ToastMessage, ToastType } from '@/types';
 
 interface ToastContextType {
@@ -17,22 +11,27 @@ const ToastContext = createContext<ToastContextType | null>(null);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  // BUG-27 fix: use incrementing counter instead of Date.now() to avoid ID collisions
+  const counterRef = useRef(0);
+  // BUG-28 fix: track timer handles for cleanup on unmount
+  const timersRef  = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Clear all pending timers on unmount
+  useEffect(() => () => timersRef.current.forEach(clearTimeout), []);
 
   const showToast = useCallback(
     (message: string, type: ToastType = 'success') => {
-      const id = Date.now();
+      const id = ++counterRef.current;
       setToasts((prev) => [...prev, { id, message, type, exiting: false }]);
 
-      // Start exit animation after 2.2s, remove after 2.5s
-      setTimeout(() => {
-        setToasts((prev) =>
-          prev.map((t) => (t.id === id ? { ...t, exiting: true } : t))
-        );
+      const t1 = setTimeout(() => {
+        setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, exiting: true } : t)));
       }, 2200);
-
-      setTimeout(() => {
+      const t2 = setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
       }, 2500);
+
+      timersRef.current.push(t1, t2);
     },
     []
   );

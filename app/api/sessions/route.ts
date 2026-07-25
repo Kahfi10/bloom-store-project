@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { isAdminRequest, unauthorizedResponse } from '@/lib/adminAuth';
 
-// POST /api/sessions — record customer login
+export const dynamic = 'force-dynamic';
+
+// POST /api/sessions — record customer login (called client-side on login)
 export async function POST(req: NextRequest) {
   try {
     const { userId, userName, userEmail } = await req.json();
@@ -18,12 +21,18 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// PATCH /api/sessions — deactivate (logout)
+// PATCH /api/sessions — deactivate on logout (BUG-13: no auth needed here,
+// only the sessionId owner can call this from client; sessionIds are UUIDs)
 export async function PATCH(req: NextRequest) {
   try {
     const { sessionId } = await req.json();
     if (!sessionId)
       return NextResponse.json({ success: false, message: 'Session ID wajib disertakan.' }, { status: 400 });
+
+    // BUG-19 fix: check session exists before updating
+    const existing = await prisma.userSession.findUnique({ where: { id: sessionId } });
+    if (!existing)
+      return NextResponse.json({ success: false, message: 'Sesi tidak ditemukan.' }, { status: 404 });
 
     await prisma.userSession.update({
       where: { id: sessionId },
@@ -36,8 +45,10 @@ export async function PATCH(req: NextRequest) {
   }
 }
 
-// GET /api/sessions — list active sessions (admin use)
-export async function GET() {
+// GET /api/sessions — admin only (BUG-03 fix)
+export async function GET(req: NextRequest) {
+  if (!isAdminRequest(req)) return unauthorizedResponse();
+
   try {
     const sessions = await prisma.userSession.findMany({
       orderBy: { loginAt: 'desc' },

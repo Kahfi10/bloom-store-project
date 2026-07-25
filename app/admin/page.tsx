@@ -25,16 +25,27 @@ const STATUS_COLOR: Record<string, string> = {
 };
 
 export default function AdminDashboard() {
-  const [stats,     setStats]     = useState<Stats | null>(null);
-  const [loading,   setLoading]   = useState(true);
+  const [stats,      setStats]      = useState<Stats | null>(null);
+  const [loading,    setLoading]    = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
   const fetchStats = useCallback(async () => {
     try {
       const res  = await fetch('/api/admin/stats');
       const data = await res.json();
-      if (data.success) { setStats(data.data); setLastUpdate(new Date()); }
-    } catch { /* silent */ } finally { setLoading(false); }
+      if (data.success) {
+        setStats(data.data);
+        setLastUpdate(new Date());
+        setFetchError(null);
+      } else {
+        setFetchError('Gagal memuat statistik dari server.');
+      }
+    } catch {
+      setFetchError('Tidak dapat terhubung ke server. Periksa koneksi Anda.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -75,6 +86,17 @@ export default function AdminDashboard() {
           <svg className="w-8 h-8 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="12" cy="12" r="10" strokeOpacity="0.25"/><path d="M12 2a10 10 0 0110 10" strokeLinecap="round"/>
           </svg>
+        </div>
+      ) : fetchError ? (
+        /* BUG-29 fix: show error state instead of silent blank */
+        <div className="flex flex-col items-center justify-center h-64 text-center gap-4">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-red-500">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p className="text-gray-400 text-sm">{fetchError}</p>
+          <button onClick={fetchStats} className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm rounded-xl border border-gray-700 transition-all">
+            Coba Lagi
+          </button>
         </div>
       ) : stats ? (
         <div className="space-y-8">

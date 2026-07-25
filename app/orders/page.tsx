@@ -179,7 +179,7 @@ export default function OrdersPage() {
     if (!isLoggedIn) {
       router.replace('/login');
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, router]);
 
   if (!isLoggedIn) return null;
 

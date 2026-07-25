@@ -38,11 +38,13 @@ export default function AdminOrderDetailPage() {
   const [updating, setUpdating] = useState(false);
 
   const fetchOrder = useCallback(async () => {
-    const res  = await fetch(`/api/orders/${id}`);
-    const data = await res.json();
-    if (data.success) setOrder(data.data);
-    else router.replace('/admin/orders');
-    setLoading(false);
+    try {
+      const res  = await fetch(`/api/orders/${id}`);
+      const data = await res.json();
+      if (data.success) setOrder(data.data);
+      else router.replace('/admin/orders');
+    } catch { router.replace('/admin/orders'); }
+    finally  { setLoading(false); }
   }, [id, router]);
 
   useEffect(() => { fetchOrder(); }, [fetchOrder]);
@@ -50,14 +52,16 @@ export default function AdminOrderDetailPage() {
   async function handleTransition(newStatus: string) {
     if (!confirm(`Ubah status menjadi ${newStatus}?`)) return;
     setUpdating(true);
-    const res  = await fetch(`/api/orders/${id}/status`, {
-      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus }),
-    });
-    const data = await res.json();
-    if (data.success) setOrder(data.data);
-    else alert(data.message);
-    setUpdating(false);
+    try {
+      const res  = await fetch(`/api/orders/${id}/status`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      const data = await res.json();
+      if (data.success) setOrder(data.data);
+      else alert(data.message);
+    } catch { alert('Terjadi kesalahan jaringan. Coba lagi.'); }
+    finally  { setUpdating(false); }
   }
 
   if (loading) return <div className="p-8 text-gray-600">Memuat...</div>;

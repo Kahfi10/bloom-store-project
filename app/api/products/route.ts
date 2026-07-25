@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { isAdminRequest, unauthorizedResponse } from '@/lib/adminAuth';
+
+export const dynamic = 'force-dynamic';
 
 // ─── Helper: parse images JSON string → array ───────────────────────────────
 function parseProduct(p: {
@@ -42,8 +45,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// ─── POST /api/products ─────────────────────────────────────────────────────
+// ─── POST /api/products — admin only ───────────────────────────────────────
 export async function POST(req: NextRequest) {
+  if (!isAdminRequest(req)) return unauthorizedResponse();
   try {
     const body = await req.json();
     const { name, slug, category, price, stock, description, heroImage, images, infoOrigin, infoLatinName, infoMeaning, infoHistory, infoFunFact, infoBloomSeason } = body;

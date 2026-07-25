@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // ─── Valid status transitions (PRD §Modul 5) ───────────────────────────────
 const VALID_TRANSITIONS: Record<string, string[]> = {
   DRAFT:     ['CONFIRMED', 'CANCELLED'],
@@ -22,65 +24,67 @@ export async function POST(req: NextRequest) {
     if (!/^\+?[\d\s\-()]{8,15}$/.test(phoneNumber.trim()))
       return error400('Format nomor telepon tidak valid.');
 
-    // ── Validasi items ─────────────────────────────────────────────────
+    // ── Validasi items (basic checks outside transaction) ──────────────
     if (!Array.isArray(items) || items.length === 0)
       return error400('Keranjang kosong, tidak dapat membuat pesanan.');
 
-    // Ambil produk dari DB untuk validasi stok & harga
-    const productIds: number[] = items.map((i: { productId: number }) => i.productId);
-    const dbProducts = await prisma.product.findMany({
-      where: { id: { in: productIds } },
-    });
-    const productMap = new Map(dbProducts.map((p) => [p.id, p]));
-
-    let totalPrice = 0;
-    const orderItems: { productId: number; qty: number; price: number }[] = [];
-
     for (const item of items) {
-      const { productId, qty } = item;
-      const product = productMap.get(productId);
-
-      if (!product)
-        return error400(`Produk dengan ID ${productId} tidak ditemukan.`);
+      const { qty } = item;
       if (!Number.isInteger(qty) || qty < 1)
-        return error400(`Jumlah untuk produk '${product.name}' tidak valid. Minimum 1 unit.`);
+        return error400(`Jumlah item tidak valid. Minimum 1 unit.`);
       if (qty > 10)
-        return error400(`Maksimum pembelian 10 unit per produk. (${product.name})`);
-      if (qty > product.stock)
-        return error400(`Stok '${product.name}' tidak mencukupi. Tersedia: ${product.stock} unit.`);
-
-      const lineTotal = product.price * qty;
-      totalPrice += lineTotal;
-      orderItems.push({ productId, qty, price: product.price });
+        return error400(`Maksimum pembelian 10 unit per produk.`);
     }
 
-    // ── Buat order + update stok (dalam transaction) ───────────────────
-    const order = await prisma.$transaction(async (tx) => {
-      // Buat order
-      const newOrder = await tx.order.create({
-        data: {
-          status: 'DRAFT',
-          totalPrice,
-          recipientName:   recipientName.trim(),
-          shippingAddress: shippingAddress.trim(),
-          phoneNumber:     phoneNumber.trim(),
-          items: {
-            create: orderItems,
+    // ── Buat order + validasi stok di dalam transaction (BUG-07 fix) ───
+    let order;
+    try {
+      order = await prisma.$transaction(async (tx) => {
+        // Re-fetch products inside transaction to get locked, current stock
+        const productIds: number[] = items.map((i: { productId: number }) => i.productId);
+        const dbProducts = await tx.product.findMany({ where: { id: { in: productIds } } });
+        const productMap = new Map(dbProducts.map((p) => [p.id, p]));
+
+        let totalPrice = 0;
+        const orderItems: { productId: number; qty: number; price: number }[] = [];
+
+        for (const item of items) {
+          const { productId, qty } = item;
+          const product = productMap.get(productId);
+          if (!product) throw new Error(`Produk dengan ID ${productId} tidak ditemukan.`);
+          if (qty > product.stock)
+            throw new Error(`Stok '${product.name}' tidak mencukupi. Tersedia: ${product.stock} unit.`);
+
+          totalPrice += product.price * qty;
+          orderItems.push({ productId, qty, price: product.price });
+        }
+
+        // Buat order
+        const newOrder = await tx.order.create({
+          data: {
+            status:          'DRAFT',
+            totalPrice,
+            recipientName:   recipientName.trim(),
+            shippingAddress: shippingAddress.trim(),
+            phoneNumber:     phoneNumber.trim(),
+            items:           { create: orderItems },
           },
-        },
-        include: { items: { include: { product: true } } },
-      });
-
-      // Kurangi stok setiap produk
-      for (const item of orderItems) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data:  { stock: { decrement: item.qty } },
+          include: { items: { include: { product: true } } },
         });
-      }
 
-      return newOrder;
-    });
+        // Kurangi stok setiap produk
+        for (const item of orderItems) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data:  { stock: { decrement: item.qty } },
+          });
+        }
+        return newOrder;
+      });
+    } catch (txErr: unknown) {
+      const msg = txErr instanceof Error ? txErr.message : 'Gagal memproses pesanan.';
+      return error400(msg);
+    }
 
     return NextResponse.json(
       { success: true, data: order, message: `Pesanan ${order.id} berhasil dibuat dengan status DRAFT.` },

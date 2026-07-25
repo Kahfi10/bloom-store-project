@@ -82,11 +82,11 @@ export default function OrderDetailPage() {
 
   useEffect(() => {
     if (!isLoggedIn) { router.replace('/login'); }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, router]);
 
   useEffect(() => {
     if (isLoggedIn && !order) { router.replace('/orders'); }
-  }, [order, isLoggedIn]);
+  }, [order, isLoggedIn, router]);
 
   if (!isLoggedIn || !order || !cfg) return null;
 
