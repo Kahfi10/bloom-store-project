@@ -32,15 +32,17 @@ const STATUS_NEXT_BTN: Partial<Record<OrderStatus, { to: OrderStatus; label: str
 // Timeline
 function StatusTimeline({ current }: { current: OrderStatus }) {
   const steps: OrderStatus[] = ['DRAFT', 'CONFIRMED', 'COMPLETED'];
-  const cancelled  = current === 'CANCELLED';
-  const currentIdx = steps.indexOf(current);
+  const cancelled   = current === 'CANCELLED';
+  const currentIdx  = steps.indexOf(current);
+  // COMPLETED is a terminal "done" state — all steps including current should show checkmark
+  const allDone     = current === 'COMPLETED';
 
   return (
     <div className="flex items-center gap-0">
       {steps.map((step, i) => {
-        const done    = cancelled ? false : i < currentIdx;
-        const active  = !cancelled && i === currentIdx;
-        const pending = cancelled || i > currentIdx;
+        const done    = cancelled ? false : (allDone ? true : i < currentIdx);
+        const active  = !cancelled && !allDone && i === currentIdx;
+        const pending = cancelled || (!allDone && i > currentIdx);
         const cfg     = STATUS_CFG[step];
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
@@ -53,7 +55,7 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
                   ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M2 6l3 3 5-5"/></svg>
                   : i + 1}
               </div>
-              <span className={`text-xs font-medium whitespace-nowrap ${active ? 'text-bloom-text' : 'text-bloom-secondary'}`}>
+              <span className={`text-xs font-medium whitespace-nowrap ${active || allDone ? 'text-bloom-text' : 'text-bloom-secondary'}`}>
                 {cfg.label}
               </span>
             </div>

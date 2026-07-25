@@ -32,12 +32,13 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
   const steps: OrderStatus[] = ['DRAFT', 'CONFIRMED', 'COMPLETED'];
   const cancelled  = current === 'CANCELLED';
   const currentIdx = steps.indexOf(current);
+  const allDone    = current === 'COMPLETED';
 
   return (
     <div className="flex items-start gap-0 w-full">
       {steps.map((step, i) => {
-        const done   = !cancelled && i < currentIdx;
-        const active = !cancelled && i === currentIdx;
+        const done   = !cancelled && (allDone ? true : i < currentIdx);
+        const active = !cancelled && !allDone && i === currentIdx;
         const cfg    = STATUS_CFG[step];
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
@@ -50,7 +51,7 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
                   ? <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M2 6.5l3 3 6-6"/></svg>
                   : i + 1}
               </div>
-              <p className={`text-xs font-semibold ${active ? 'text-bloom-text' : 'text-bloom-secondary'}`}>
+              <p className={`text-xs font-semibold ${active || allDone ? 'text-bloom-text' : 'text-bloom-secondary'}`}>
                 {cfg.label}
               </p>
             </div>
