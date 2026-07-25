@@ -13,7 +13,8 @@ export const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
 const STORAGE_KEY = 'bloom_orders';
 
 interface OrderContextType {
-  orders: Order[];
+  orders:   Order[];
+  hydrated: boolean;        // true setelah localStorage selesai dibaca
   createOrder: (items: CartItem[], shipping: ShippingInfo, totalPrice: number) =>
     Promise<{ success: boolean; message: string; order?: Order }>;
   updateStatus: (orderId: string, newStatus: OrderStatus) =>
@@ -50,9 +51,10 @@ function mapApiOrder(apiOrder: Record<string, unknown>, fallbackItems: CartItem[
 }
 
 export function OrderProvider({ children }: { children: ReactNode }) {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders,   setOrders]   = useState<Order[]>([]);
+  const [hydrated, setHydrated] = useState(false); // true after localStorage read
 
-  // BUG-02 fix: hydrate from localStorage on mount
+  // Hydrate from localStorage on mount — set hydrated=true AFTER
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -60,14 +62,16 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     } catch {
       localStorage.removeItem(STORAGE_KEY);
     }
+    setHydrated(true); // mark as done regardless of success/failure
   }, []);
 
-  // Persist orders to localStorage whenever they change
+  // Persist to localStorage on change
   useEffect(() => {
+    if (!hydrated) return; // don't persist the initial empty array
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
     } catch { /* quota exceeded or private browsing */ }
-  }, [orders]);
+  }, [orders, hydrated]);
 
   // ── Create order ────────────────────────────────────────────────────────────
   const createOrder = useCallback(
@@ -148,7 +152,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <OrderContext.Provider value={{ orders, createOrder, updateStatus, getOrder }}>
+    <OrderContext.Provider value={{ orders, hydrated, createOrder, updateStatus, getOrder }}>
       {children}
     </OrderContext.Provider>
   );

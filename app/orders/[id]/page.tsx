@@ -1,6 +1,5 @@
 ﻿'use client';
 
-import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -11,12 +10,11 @@ import { formatRupiah } from '@/lib/mockData';
 import { OrderStatus } from '@/types';
 import BackButton from '@/components/ui/BackButton';
 
-// ─── Status config ──────────────────────────────────────────────────────────
 const STATUS_CFG: Record<OrderStatus, { label: string; bg: string; text: string; dot: string; desc: string }> = {
-  DRAFT:     { label: 'Draft',     bg: 'bg-gray-100',  text: 'text-gray-600',      dot: 'bg-gray-400',        desc: 'Pesanan baru dibuat, menunggu konfirmasi.' },
-  CONFIRMED: { label: 'Confirmed', bg: 'bg-blue-50',   text: 'text-blue-700',      dot: 'bg-blue-500',        desc: 'Pesanan telah dikonfirmasi dan sedang diproses.' },
-  COMPLETED: { label: 'Completed', bg: 'bg-green-50',  text: 'text-green-700',     dot: 'bg-bloom-success',   desc: 'Pesanan telah selesai dan diterima.' },
-  CANCELLED: { label: 'Cancelled', bg: 'bg-red-50',    text: 'text-bloom-danger',  dot: 'bg-bloom-danger',    desc: 'Pesanan dibatalkan.' },
+  DRAFT:     { label: 'Draft',     bg: 'bg-gray-100', text: 'text-gray-600',     dot: 'bg-gray-400',      desc: 'Pesanan baru dibuat, menunggu konfirmasi.' },
+  CONFIRMED: { label: 'Confirmed', bg: 'bg-blue-50',  text: 'text-blue-700',     dot: 'bg-blue-500',      desc: 'Pesanan telah dikonfirmasi dan sedang diproses.' },
+  COMPLETED: { label: 'Completed', bg: 'bg-green-50', text: 'text-green-700',    dot: 'bg-bloom-success', desc: 'Pesanan telah selesai dan diterima.' },
+  CANCELLED: { label: 'Cancelled', bg: 'bg-red-50',   text: 'text-bloom-danger', dot: 'bg-bloom-danger',  desc: 'Pesanan dibatalkan.' },
 };
 
 const NEXT_ACTIONS: Partial<Record<OrderStatus, { to: OrderStatus; label: string; cls: string }[]>> = {
@@ -25,12 +23,11 @@ const NEXT_ACTIONS: Partial<Record<OrderStatus, { to: OrderStatus; label: string
     { to: 'CANCELLED', label: 'Batalkan Pesanan',   cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
   ],
   CONFIRMED: [
-    { to: 'COMPLETED', label: 'Tandai Selesai',     cls: 'bg-bloom-success text-white hover:opacity-90' },
-    { to: 'CANCELLED', label: 'Batalkan Pesanan',   cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
+    { to: 'COMPLETED', label: 'Tandai Selesai',   cls: 'bg-bloom-success text-white hover:opacity-90' },
+    { to: 'CANCELLED', label: 'Batalkan Pesanan', cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
   ],
 };
 
-// ─── Timeline ───────────────────────────────────────────────────────────────
 function StatusTimeline({ current }: { current: OrderStatus }) {
   const steps: OrderStatus[] = ['DRAFT', 'CONFIRMED', 'COMPLETED'];
   const cancelled  = current === 'CANCELLED';
@@ -45,13 +42,10 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
             <div className="flex flex-col items-center gap-1.5 w-full">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 font-bold text-xs transition-all ${
-                done   ? 'bg-bloom-text border-bloom-text text-white' : ''
-              } ${
-                active ? 'bg-white border-bloom-text text-bloom-text shadow' : ''
-              } ${
-                !done && !active ? 'bg-bloom-surface border-bloom-border text-bloom-secondary' : ''
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 font-bold text-xs transition-all
+                ${done   ? 'bg-bloom-text border-bloom-text text-white' : ''}
+                ${active ? 'bg-white border-bloom-text text-bloom-text shadow' : ''}
+                ${!done && !active ? 'bg-bloom-surface border-bloom-border text-bloom-secondary' : ''}`}>
                 {done
                   ? <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M2 6.5l3 3 6-6"/></svg>
                   : i + 1}
@@ -70,35 +64,56 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
   );
 }
 
-// ─── Page ───────────────────────────────────────────────────────────────────
 export default function OrderDetailPage() {
-  const params   = useParams();
-  const orderId  = params.id as string;
-  const router   = useRouter();
-  const mounted  = useRef(false);
+  const params  = useParams();
+  const orderId = params.id as string;
+  const router  = useRouter();
 
   const { isLoggedIn }             = useAuth();
-  const { getOrder, updateStatus } = useOrder();
+  const { hydrated, getOrder, updateStatus } = useOrder();
   const { showToast }              = useToast();
 
   const order   = getOrder(orderId);
   const cfg     = order ? STATUS_CFG[order.status] : null;
   const actions = order ? (NEXT_ACTIONS[order.status] ?? []) : [];
 
-  // Mark mounted after first render so redirects don't fire on initial hydration
-  useEffect(() => { mounted.current = true; }, []);
+  // Auth guard — redirect to login if not logged in
+  if (!isLoggedIn) {
+    if (typeof window !== 'undefined') router.replace('/login');
+    return null;
+  }
 
-  useEffect(() => {
-    if (!mounted.current) return;
-    if (!isLoggedIn) { router.replace('/login'); }
-  }, [isLoggedIn, router]);
+  // Show spinner while orders are being loaded from localStorage
+  if (!hydrated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-bloom-bg">
+        <svg className="w-8 h-8 animate-spin text-bloom-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="10" strokeOpacity="0.25"/>
+          <path d="M12 2a10 10 0 0110 10" strokeLinecap="round"/>
+        </svg>
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    if (!mounted.current) return;
-    if (isLoggedIn && !order) { router.replace('/orders'); }
-  }, [order, isLoggedIn, router]);
-
-  if (!isLoggedIn || !order || !cfg) return null;
+  // Order genuinely not found after hydration — show message, no redirect
+  if (!order || !cfg) {
+    return (
+      <div className="min-h-screen bg-bloom-bg pt-20 flex flex-col items-center justify-center gap-6 px-6">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" className="text-bloom-secondary">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+          <rect x="9" y="3" width="6" height="4" rx="1"/>
+          <path d="M9 12h6M9 16h4"/>
+        </svg>
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-bloom-text mb-2">Pesanan Tidak Ditemukan</h1>
+          <p className="text-sm text-bloom-secondary mb-6">ID pesanan tidak valid atau pesanan sudah dihapus.</p>
+          <Link href="/orders" className="inline-flex items-center gap-2 h-10 px-6 bg-bloom-text text-white text-sm font-semibold rounded-pill hover:bg-black/80 transition-all">
+            Lihat Semua Pesanan
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   async function handleTransition(to: OrderStatus) {
     const result = await updateStatus(orderId, to);
@@ -127,7 +142,6 @@ export default function OrderDetailPage() {
         </div>
 
         <div className="space-y-5 animate-fade-up">
-
           {/* Status card */}
           <div className="bg-white rounded-2xl border border-bloom-border shadow-card p-6">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -141,9 +155,7 @@ export default function OrderDetailPage() {
                 <span className="text-sm font-semibold">{cfg.label}</span>
               </div>
             </div>
-
             <p className="mt-4 text-sm text-bloom-secondary">{cfg.desc}</p>
-
             <div className="mt-6 pt-6 border-t border-bloom-border">
               <StatusTimeline current={order.status} />
             </div>
@@ -163,7 +175,6 @@ export default function OrderDetailPage() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
             {/* Items */}
             <div className="bg-white rounded-2xl border border-bloom-border shadow-card p-6 space-y-4">
               <h2 className="text-sm font-bold text-bloom-text">Produk Dipesan</h2>
@@ -189,36 +200,27 @@ export default function OrderDetailPage() {
               </div>
             </div>
 
-            {/* Shipping info */}
+            {/* Shipping */}
             <div className="bg-white rounded-2xl border border-bloom-border shadow-card p-6 space-y-4">
               <h2 className="text-sm font-bold text-bloom-text">Informasi Pengiriman</h2>
               <div className="space-y-3">
                 {[
-                  { icon: 'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z',    label: 'Penerima',  val: order.shipping.recipientName },
-                  { icon: 'M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0zM12 13a3 3 0 100-6 3 3 0 000 6z', label: 'Alamat',    val: order.shipping.shippingAddress },
-                  { icon: 'M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.12 9.88 19.79 19.79 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z', label: 'Telepon', val: order.shipping.phoneNumber },
-                ].map(({ icon, label, val }) => (
-                  <div key={label} className="flex gap-3 text-sm">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      strokeWidth="1.7" strokeLinecap="round" className="text-bloom-secondary flex-shrink-0 mt-0.5">
-                      <path d={icon}/>
-                    </svg>
-                    <div>
-                      <p className="text-xs text-bloom-secondary">{label}</p>
-                      <p className="font-medium text-bloom-text leading-snug">{val}</p>
-                    </div>
+                  { label: 'Penerima', val: order.shipping.recipientName },
+                  { label: 'Alamat',   val: order.shipping.shippingAddress },
+                  { label: 'Telepon',  val: order.shipping.phoneNumber },
+                ].map(({ label, val }) => (
+                  <div key={label}>
+                    <p className="text-xs text-bloom-secondary">{label}</p>
+                    <p className="text-sm font-medium text-bloom-text leading-snug">{val}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Back */}
           <Link href="/orders"
             className="inline-flex items-center gap-1.5 text-sm text-bloom-secondary hover:text-bloom-text transition-colors group">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor"
-              strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
-              className="group-hover:-translate-x-0.5 transition-transform">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-0.5 transition-transform">
               <path d="M9 2.5L4.5 7 9 11.5"/>
             </svg>
             Kembali ke Semua Pesanan
