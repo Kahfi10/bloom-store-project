@@ -19,13 +19,14 @@ export default function Navbar() {
   const frosted = scrolled || !isHome;
 
   useEffect(() => {
-    // rAF-throttled: at most one setState per animation frame (~16 ms)
-    // prevents constant re-renders from invalidating the video composite layer
+    // rAF-throttled scroll — update frosted state + close dropdown on scroll
     let rafId = 0;
     const handleScroll = () => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         setScrolled(window.scrollY > 40);
+        // Close dropdown when user scrolls — prevents accidental clicks on menu items
+        setMenuOpen(false);
       });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });

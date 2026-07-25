@@ -2,6 +2,9 @@
  * lib/products.ts
  * Server-side helpers — import ini HANYA di Server Components atau Route Handlers.
  * Jangan import di Client Components ('use client').
+ *
+ * Setiap fungsi punya fallback ke mockData.ts jika DB tidak tersedia,
+ * sehingga halaman produk tetap bekerja meski DB belum di-seed.
  */
 import type { Product as PrismaProduct } from '@prisma/client';
 import type { Product } from '@/types';
@@ -30,20 +33,40 @@ export function mapProduct(p: PrismaProduct): Product {
   };
 }
 
-// ─── Fetch all products ─────────────────────────────────────────────────────
+// ─── Fetch all products (DB first, fallback to mockData) ────────────────────
 export async function getAllProducts(): Promise<Product[]> {
-  const rows = await prisma.product.findMany({ orderBy: { id: 'asc' } });
-  return rows.map(mapProduct);
+  try {
+    const rows = await prisma.product.findMany({ orderBy: { id: 'asc' } });
+    if (rows.length > 0) return rows.map(mapProduct);
+  } catch {
+    // DB unavailable or not seeded — fall through to mockData
+  }
+  // Fallback: use static mockData (always available)
+  const { products } = await import('./mockData');
+  return products;
 }
 
-// ─── Fetch single product by slug ──────────────────────────────────────────
+// ─── Fetch single product by slug (DB first, fallback to mockData) ──────────
 export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const row = await prisma.product.findUnique({ where: { slug } });
-  return row ? mapProduct(row) : null;
+  try {
+    const row = await prisma.product.findUnique({ where: { slug } });
+    if (row) return mapProduct(row);
+  } catch {
+    // DB unavailable — fall through to mockData
+  }
+  // Fallback: use static mockData
+  const { products } = await import('./mockData');
+  return products.find(p => p.slug === slug) ?? null;
 }
 
-// ─── Fetch single product by id ─────────────────────────────────────────────
+// ─── Fetch single product by id (DB first, fallback to mockData) ────────────
 export async function getProductById(id: number): Promise<Product | null> {
-  const row = await prisma.product.findUnique({ where: { id } });
-  return row ? mapProduct(row) : null;
+  try {
+    const row = await prisma.product.findUnique({ where: { id } });
+    if (row) return mapProduct(row);
+  } catch {
+    // DB unavailable — fall through to mockData
+  }
+  const { products } = await import('./mockData');
+  return products.find(p => p.id === id) ?? null;
 }
