@@ -1,0 +1,2635 @@
+[
+  {
+    "description": "  Sebagai pelanggan Bloom Store\n  Saya ingin dapat menambahkan bunga ke keranjang dengan jumlah yang valid\n  Agar saya bisa memesan produk sesuai kebutuhan",
+    "elements": [
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;menambahkan-produk-dengan-jumlah-valid",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Menambahkan produk dengan jumlah valid",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1746399
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 92000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "stok produk \"Anggrek Bulan\" tersedia sebanyak 15 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 393799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "pelanggan ingin membeli 3 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 234999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "sistem menerima penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 182599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "pesan \"valid\" ditampilkan",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:46"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 164699
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;membeli-tepat-1-unit-(batas-minimum)",
+        "keyword": "Scenario",
+        "line": 18,
+        "name": "Membeli tepat 1 unit (batas minimum)",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 70700
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 57700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 19,
+            "name": "stok produk \"Red Rose\" tersedia sebanyak 5 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 144199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "pelanggan ingin membeli 1 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 117799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 21,
+            "name": "sistem menerima penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 220400
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;membeli-tepat-10-unit-(batas-maksimum)",
+        "keyword": "Scenario",
+        "line": 23,
+        "name": "Membeli tepat 10 unit (batas maksimum)",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 52200
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 31300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 24,
+            "name": "stok produk \"Lavender\" tersedia sebanyak 20 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 85300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 25,
+            "name": "pelanggan ingin membeli 10 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 67399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 26,
+            "name": "sistem menerima penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 47400
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;menolak-jumlah-nol",
+        "keyword": "Scenario",
+        "line": 30,
+        "name": "Menolak jumlah nol",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 34299
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 31,
+            "name": "stok produk \"Krisan\" tersedia sebanyak 20 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 81499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 32,
+            "name": "pelanggan ingin membeli 0 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 131600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 33,
+            "name": "sistem menolak penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 108900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 34,
+            "name": "pesan error mengandung kata \"1\"",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 109599
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;menolak-jumlah-negatif",
+        "keyword": "Scenario",
+        "line": 36,
+        "name": "Menolak jumlah negatif",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 50299
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 31199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 37,
+            "name": "stok produk \"Krisan\" tersedia sebanyak 20 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 75399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 38,
+            "name": "pelanggan ingin membeli -5 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 39,
+            "name": "sistem menolak penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 47300
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;menolak-jumlah-melebihi-batas-maksimum-10",
+        "keyword": "Scenario",
+        "line": 41,
+        "name": "Menolak jumlah melebihi batas maksimum 10",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 36200
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 28699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 42,
+            "name": "stok produk \"Lavender\" tersedia sebanyak 50 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 130899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 43,
+            "name": "pelanggan ingin membeli 11 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 55000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 44,
+            "name": "sistem menolak penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 41099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 45,
+            "name": "pesan error mengandung kata \"10\"",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 122100
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;menolak-pembelian-saat-stok-habis",
+        "keyword": "Scenario",
+        "line": 47,
+        "name": "Menolak pembelian saat stok habis",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 43100
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 73499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 48,
+            "name": "stok produk \"Hydrangea\" tersedia sebanyak 0 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 64499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 49,
+            "name": "pelanggan ingin membeli 1 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 46100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 50,
+            "name": "sistem menolak penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 87799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 51,
+            "name": "pesan error mengandung kata \"habis\"",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 74699
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;menolak-jumlah-melebihi-stok-yang-tersedia",
+        "keyword": "Scenario",
+        "line": 53,
+        "name": "Menolak jumlah melebihi stok yang tersedia",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30699
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 23699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 54,
+            "name": "stok produk \"Baby's Breath\" tersedia sebanyak 3 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 63000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 55,
+            "name": "pelanggan ingin membeli 5 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 46300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 56,
+            "name": "sistem menolak penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 39099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 57,
+            "name": "pesan error mengandung kata \"stok\"",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 81999
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;menolak-jumlah-desimal",
+        "keyword": "Scenario",
+        "line": 59,
+        "name": "Menolak jumlah desimal",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 24100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 60,
+            "name": "stok produk \"Lili Putih\" tersedia sebanyak 12 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 58199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 61,
+            "name": "pelanggan ingin membeli 2.5 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 58399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 62,
+            "name": "sistem menolak penambahan ke keranjang",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 38400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 63,
+            "name": "pesan error mengandung kata \"bulat\"",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 76400
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;validasi-berbagai-jumlah-pembelian-terhadap-batas-sistem",
+        "keyword": "Scenario Outline",
+        "line": 74,
+        "name": "Validasi berbagai jumlah pembelian terhadap batas sistem",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30499
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 24899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "stok produk tersedia sebanyak 10 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 132299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "pelanggan ingin membeli 1 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 93900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "hasil validasi adalah valid",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 135499
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;validasi-berbagai-jumlah-pembelian-terhadap-batas-sistem",
+        "keyword": "Scenario Outline",
+        "line": 75,
+        "name": "Validasi berbagai jumlah pembelian terhadap batas sistem",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 40500
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 20700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "stok produk tersedia sebanyak 10 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 78099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "pelanggan ingin membeli 10 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 43599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "hasil validasi adalah valid",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 37299
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;validasi-berbagai-jumlah-pembelian-terhadap-batas-sistem",
+        "keyword": "Scenario Outline",
+        "line": 76,
+        "name": "Validasi berbagai jumlah pembelian terhadap batas sistem",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 27300
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 23499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "stok produk tersedia sebanyak 10 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 56000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "pelanggan ingin membeli 5 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 52599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "hasil validasi adalah valid",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 48000
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;validasi-berbagai-jumlah-pembelian-terhadap-batas-sistem",
+        "keyword": "Scenario Outline",
+        "line": 77,
+        "name": "Validasi berbagai jumlah pembelian terhadap batas sistem",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 20700
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 22099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "stok produk tersedia sebanyak 10 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 43999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "pelanggan ingin membeli 0 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 61200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "hasil validasi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 56499
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;validasi-berbagai-jumlah-pembelian-terhadap-batas-sistem",
+        "keyword": "Scenario Outline",
+        "line": 78,
+        "name": "Validasi berbagai jumlah pembelian terhadap batas sistem",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 26999
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 22900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "stok produk tersedia sebanyak 10 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 58500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "pelanggan ingin membeli -1 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 57199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "hasil validasi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 56300
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;validasi-berbagai-jumlah-pembelian-terhadap-batas-sistem",
+        "keyword": "Scenario Outline",
+        "line": 79,
+        "name": "Validasi berbagai jumlah pembelian terhadap batas sistem",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 29099
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 24599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "stok produk tersedia sebanyak 10 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 48700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "pelanggan ingin membeli 11 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 38999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "hasil validasi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 33199
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;validasi-berbagai-jumlah-pembelian-terhadap-batas-sistem",
+        "keyword": "Scenario Outline",
+        "line": 80,
+        "name": "Validasi berbagai jumlah pembelian terhadap batas sistem",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 54000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 14000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "stok produk tersedia sebanyak 3 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "pelanggan ingin membeli 5 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 34999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "hasil validasi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 54500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validasi-keranjang-belanja;validasi-berbagai-jumlah-pembelian-terhadap-batas-sistem",
+        "keyword": "Scenario Outline",
+        "line": 81,
+        "name": "Validasi berbagai jumlah pembelian terhadap batas sistem",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 22800
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 22100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 68,
+            "name": "stok produk tersedia sebanyak 0 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 46800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 69,
+            "name": "pelanggan ingin membeli 1 unit",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 70,
+            "name": "hasil validasi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\cart.steps.ts:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 41400
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "validasi-keranjang-belanja",
+    "line": 5,
+    "keyword": "Feature",
+    "name": "Validasi Keranjang Belanja",
+    "tags": [],
+    "uri": "features\\cart.feature"
+  },
+  {
+    "description": "  Sebagai pelanggan Bloom Store\n  Saya ingin status pesanan saya dapat diubah sesuai alur yang benar\n  Agar proses pemesanan berjalan dengan tertib dan transparan",
+    "elements": [
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;mengkonfirmasi-pesanan-yang-baru-dibuat",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Mengkonfirmasi pesanan yang baru dibuat",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 20800
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 17499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "pesanan berada pada status \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 118299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "admin mengubah status menjadi \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 213600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "sistem menerima perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 132800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "status pesanan menjadi \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:42"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 101400
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;menyelesaikan-pesanan-yang-sudah-dikonfirmasi",
+        "keyword": "Scenario",
+        "line": 18,
+        "name": "Menyelesaikan pesanan yang sudah dikonfirmasi",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 22800
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 16399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 19,
+            "name": "pesanan berada pada status \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 45899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "admin mengubah status menjadi \"COMPLETED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 50700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 21,
+            "name": "sistem menerima perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 22,
+            "name": "status pesanan menjadi \"COMPLETED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:42"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 42699
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;membatalkan-pesanan-yang-masih-draft",
+        "keyword": "Scenario",
+        "line": 24,
+        "name": "Membatalkan pesanan yang masih Draft",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 13100
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 10099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 25,
+            "name": "pesanan berada pada status \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 43500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 26,
+            "name": "admin mengubah status menjadi \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 45899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 27,
+            "name": "sistem menerima perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 25999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 28,
+            "name": "status pesanan menjadi \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:42"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 44799
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;membatalkan-pesanan-yang-sudah-dikonfirmasi",
+        "keyword": "Scenario",
+        "line": 30,
+        "name": "Membatalkan pesanan yang sudah dikonfirmasi",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 11400
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 9099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 31,
+            "name": "pesanan berada pada status \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 39600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 32,
+            "name": "admin mengubah status menjadi \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 44700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 33,
+            "name": "sistem menerima perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 38900
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;menolak-pesanan-draft-langsung-ke-completed-(lewati-confirmed)",
+        "keyword": "Scenario",
+        "line": 37,
+        "name": "Menolak pesanan Draft langsung ke Completed (lewati Confirmed)",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 15899
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 11100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 38,
+            "name": "pesanan berada pada status \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 39,
+            "name": "admin mengubah status menjadi \"COMPLETED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 92299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 40,
+            "name": "sistem menolak perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 77699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 41,
+            "name": "pesan penolakan tidak kosong",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:50"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 64899
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;menolak-perubahan-status-pesanan-yang-sudah-selesai",
+        "keyword": "Scenario",
+        "line": 43,
+        "name": "Menolak perubahan status pesanan yang sudah selesai",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 9199
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 8000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 44,
+            "name": "pesanan berada pada status \"COMPLETED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 33699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 45,
+            "name": "admin mengubah status menjadi \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 45800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 46,
+            "name": "sistem menolak perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 21300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 47,
+            "name": "pesan penolakan mengandung kata \"selesai\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:57"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 71399
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;menolak-mengaktifkan-kembali-pesanan-yang-dibatalkan",
+        "keyword": "Scenario",
+        "line": 49,
+        "name": "Menolak mengaktifkan kembali pesanan yang dibatalkan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 9000
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 5700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 50,
+            "name": "pesanan berada pada status \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 51,
+            "name": "admin mengubah status menjadi \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 52,
+            "name": "sistem menolak perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 53,
+            "name": "pesan penolakan mengandung kata \"dibatalkan\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:57"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35900
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;menolak-mundur-dari-confirmed-ke-draft",
+        "keyword": "Scenario",
+        "line": 55,
+        "name": "Menolak mundur dari Confirmed ke Draft",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 8100
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 7200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 56,
+            "name": "pesanan berada pada status \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 57,
+            "name": "admin mengubah status menjadi \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 58,
+            "name": "sistem menolak perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24100
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;menolak-perubahan-ke-status-yang-sama",
+        "keyword": "Scenario",
+        "line": 62,
+        "name": "Menolak perubahan ke status yang sama",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 8200
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 6000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 63,
+            "name": "pesanan berada pada status \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 33100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 64,
+            "name": "admin mengubah status menjadi \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 33599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 65,
+            "name": "sistem menolak perubahan status",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 66,
+            "name": "pesan penolakan mengandung kata \"sama\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:57"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30699
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 77,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 8299
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 5599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 37900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 56799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah valid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 107700
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 78,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 29400
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 12600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 61200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 56399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah valid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30600
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 79,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 9700
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 6300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"COMPLETED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 34399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah valid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24699
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 80,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 8599
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 5799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 50600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 34700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah valid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 25799
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 81,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 8700
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 7099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"COMPLETED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 23499
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 82,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 13699
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 12400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 59500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 62799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 60199
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 83,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 10899
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 5999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 39499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 54000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 42500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 84,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 9500
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 6200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"COMPLETED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 27599
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 85,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 13699
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 11800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"COMPLETED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 86,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 9299
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 6100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 30600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"DRAFT\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 29400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40700
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "transisi-status-pesanan;validasi-berbagai-kombinasi-transisi-status-pesanan",
+        "keyword": "Scenario Outline",
+        "line": 87,
+        "name": "Validasi berbagai kombinasi transisi status pesanan",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 13600
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 12999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 71,
+            "name": "pesanan berada pada status \"CANCELLED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 144899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 72,
+            "name": "admin mengubah status menjadi \"CONFIRMED\"",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 37000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 73,
+            "name": "hasil transisi adalah invalid",
+            "match": {
+              "location": "features\\step_definitions\\order-status.steps.ts:64"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 37600
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "transisi-status-pesanan",
+    "line": 5,
+    "keyword": "Feature",
+    "name": "Transisi Status Pesanan",
+    "tags": [],
+    "uri": "features\\order-status.feature"
+  }
+]

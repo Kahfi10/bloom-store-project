@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from '@/lib/gsap';
@@ -17,7 +17,7 @@ export default function CollectionExplorer({ products }: CollectionExplorerProps
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // ── GSAP entrance animations ────────────────────────────────────────
+  // â”€â”€ GSAP entrance animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     if (!sectionRef.current) return;
     const ctx = gsap.context(() => {
@@ -35,7 +35,7 @@ export default function CollectionExplorer({ products }: CollectionExplorerProps
     return () => ctx.revert();
   }, []);
 
-  // ── Open / close drawer ─────────────────────────────────────────────
+  // â”€â”€ Open / close drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const openDrawer = useCallback((product: Product) => {
     setSelectedProduct(product);
     setDrawerOpen(true);
@@ -73,7 +73,7 @@ export default function CollectionExplorer({ products }: CollectionExplorerProps
               >
                 {/* Index + name */}
                 <div className="flex items-baseline gap-5">
-                  <span className="text-[11px] font-medium text-bloom-secondary/50 tabular-nums w-6">
+                  <span className="text-xs font-medium text-bloom-secondary/50 tabular-nums w-6">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span className="text-[clamp(1.3rem,3vw,2rem)] font-semibold text-bloom-text group-hover:opacity-60 transition-opacity duration-300 tracking-tight">
@@ -110,7 +110,7 @@ export default function CollectionExplorer({ products }: CollectionExplorerProps
         </ul>
       </section>
 
-      {/* Side drawer — rendered at root level for correct stacking */}
+      {/* Side drawer â€” rendered at root level for correct stacking */}
       <ProductDrawer
         product={selectedProduct}
         isOpen={drawerOpen}

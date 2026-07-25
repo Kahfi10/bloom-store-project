@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { ToastProvider } from '@/context/ToastContext';
@@ -12,6 +12,13 @@ export const metadata: Metadata = {
   description:
     'Temukan rangkaian bunga segar pilihan terbaik di Bloom Store. Anggrek, Mawar, Lavender, dan lebih banyak lagi.',
   keywords: ['bunga', 'toko bunga', 'bloom store', 'mawar', 'anggrek', 'lavender'],
+};
+
+// Viewport meta — ensures Chrome renders at correct scale
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  minimumScale: 1,
 };
 
 export default function RootLayout({

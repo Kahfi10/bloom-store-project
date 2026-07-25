@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
@@ -14,14 +14,14 @@ interface ProductDrawerProps {
   onClose: () => void;
 }
 
-// ─── Fact card ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ Fact card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FactCard({
   icon, label, value,
 }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex flex-col gap-2 p-4 bg-white rounded-xl border border-bloom-border/60 shadow-sm">
       <span className="text-bloom-secondary">{icon}</span>
-      <p className="text-[10px] font-semibold tracking-widest uppercase text-bloom-secondary">
+      <p className="text-xs font-semibold tracking-widest uppercase text-bloom-secondary">
         {label}
       </p>
       <p className="text-sm font-semibold text-bloom-text leading-snug">{value}</p>
@@ -29,23 +29,23 @@ function FactCard({
   );
 }
 
-// ─── Section label ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Section label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-bold tracking-[0.25em] uppercase text-bloom-secondary mb-4">
+    <p className="text-xs font-bold tracking-[0.25em] uppercase text-bloom-secondary mb-4">
       {children}
     </p>
   );
 }
 
-// ─── Main component ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawerProps) {
   const drawerRef     = useRef<HTMLDivElement>(null);
   const backdropRef   = useRef<HTMLDivElement>(null);
   const bodyRef       = useRef<HTMLDivElement>(null);   // scrollable body
   const heroImgRef    = useRef<HTMLDivElement>(null);   // parallax target
 
-  // ── Open / close animation ───────────────────────────────────────────
+  // â”€â”€ Open / close animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     const drawer   = drawerRef.current;
     const backdrop = backdropRef.current;
@@ -70,7 +70,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
     }
   }, [isOpen]);
 
-  // ── GSAP scroll effects inside drawer ────────────────────────────────
+  // â”€â”€ GSAP scroll effects inside drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     if (!isOpen || !product || !bodyRef.current) return;
 
@@ -133,7 +133,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
     return () => clearTimeout(timer);
   }, [isOpen, product]);
 
-  // ── ESC key ───────────────────────────────────────────────────────────
+  // â”€â”€ ESC key â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && isOpen) onClose(); };
     window.addEventListener('keydown', onKey);
@@ -168,10 +168,10 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
         className="fixed top-0 right-0 z-[70] h-full w-full max-w-[520px] bg-white shadow-2xl flex-col"
         style={{ display: 'none', transform: 'translateX(100%)' }}
       >
-        {/* ── Sticky header ─────────────────────────────────────────── */}
+        {/* â”€â”€ Sticky header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 bg-white/90 backdrop-blur-md border-b border-bloom-border z-10">
           <div className="flex items-center gap-2.5">
-            <span className="text-[10px] font-bold tracking-widest uppercase text-bloom-secondary bg-bloom-surface px-2.5 py-1 rounded-full border border-bloom-border">
+            <span className="text-xs font-bold tracking-widest uppercase text-bloom-secondary bg-bloom-surface px-2.5 py-1 rounded-full border border-bloom-border">
               {product?.category}
             </span>
           </div>
@@ -183,11 +183,11 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
           </button>
         </div>
 
-        {/* ── Scrollable body ────────────────────────────────────────── */}
+        {/* â”€â”€ Scrollable body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         {product && (
           <div ref={bodyRef} className="flex-1 overflow-y-auto">
 
-            {/* ── 1. Hero image — parallax ─────────────────────────── */}
+            {/* â”€â”€ 1. Hero image â€” parallax â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className="relative h-[320px] overflow-hidden bg-bloom-surface">
               <div ref={heroImgRef} className="absolute inset-0 scale-110">
                 <Image
@@ -211,7 +211,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
               </div>
             </div>
 
-            {/* ── 2. Intro ─────────────────────────────────────────── */}
+            {/* â”€â”€ 2. Intro â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className="px-6 py-7 border-b border-bloom-border" data-reveal>
               <SectionLabel>Tentang Bunga Ini</SectionLabel>
               <p className="text-[15px] text-bloom-text leading-relaxed">
@@ -228,7 +228,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
               </div>
             </div>
 
-            {/* ── 3. Sejarah ────────────────────────────────────────── */}
+            {/* â”€â”€ 3. Sejarah â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className="px-6 py-7 bg-bloom-surface border-b border-bloom-border" data-reveal>
               <SectionLabel>Sejarah & Asal-usul</SectionLabel>
               <p className="text-[14px] text-bloom-text leading-[1.75] whitespace-pre-line">
@@ -236,7 +236,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
               </p>
             </div>
 
-            {/* ── 4. Fakta Cards ────────────────────────────────────── */}
+            {/* â”€â”€ 4. Fakta Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className="px-6 py-7 border-b border-bloom-border">
               <SectionLabel>Fakta & Identitas</SectionLabel>
               <div className="grid grid-cols-2 gap-3">
@@ -279,7 +279,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
                       <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
                     </svg>
                     <div>
-                      <p className="text-[10px] font-bold tracking-widest uppercase opacity-60 mb-1">Fakta Menarik</p>
+                      <p className="text-xs font-bold tracking-widest uppercase opacity-60 mb-1">Fakta Menarik</p>
                       <p className="text-sm leading-snug">{product.info.funFact}</p>
                     </div>
                   </div>
@@ -287,7 +287,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
               </div>
             </div>
 
-            {/* ── 5. Gallery hint ───────────────────────────────────── */}
+            {/* â”€â”€ 5. Gallery hint â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className="px-6 py-7 border-b border-bloom-border" data-reveal>
               <SectionLabel>Galeri Foto ({product.images.length} foto)</SectionLabel>
               <div className="flex gap-2.5 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden">
@@ -302,13 +302,13 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
               </div>
             </div>
 
-            {/* ── 6. Purchase section ───────────────────────────────── */}
+            {/* â”€â”€ 6. Purchase section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className="px-6 py-7" data-reveal>
               <SectionLabel>Dapatkan Sekarang</SectionLabel>
               <AddToCartWidget product={product} />
             </div>
 
-            {/* ── 7. Full detail link ───────────────────────────────── */}
+            {/* â”€â”€ 7. Full detail link â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className="px-6 pb-10">
               <Link
                 href={`/products/${product.slug}`}

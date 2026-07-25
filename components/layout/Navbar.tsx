@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
@@ -57,7 +57,7 @@ export default function Navbar() {
     >
       <nav className="max-w-[1200px] mx-auto px-6 h-[60px] flex items-center justify-between">
 
-        {/* ── Logo ──────────────────────────────────────── */}
+        {/* â”€â”€ Logo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <Link href="/" className="flex items-center gap-2 group select-none">
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className={`transition-colors duration-300 ${textColor}`}>
             <ellipse cx="11" cy="7"   rx="3.5" ry="5.5" fill="currentColor" fillOpacity="0.85" />
@@ -70,7 +70,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* ── Nav Links ─────────────────────────────────── */}
+        {/* â”€â”€ Nav Links â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="hidden md:flex items-center gap-8">
           {[
             { label: 'Home',   href: '/' },
@@ -83,7 +83,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* ── Right Actions ─────────────────────────────── */}
+        {/* â”€â”€ Right Actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="flex items-center gap-3">
 
           {/* Cart */}
@@ -98,13 +98,13 @@ export default function Navbar() {
               <path d="M16 10a4 4 0 01-8 0" />
             </svg>
             {totalItems > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-bloom-danger text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 leading-none">
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-bloom-danger text-white text-xs font-bold rounded-full flex items-center justify-center px-1 leading-none">
                 {totalItems > 99 ? '99+' : totalItems}
               </span>
             )}
           </Link>
 
-          {/* Auth — logged out */}
+          {/* Auth â€” logged out */}
           {!isLoggedIn && (
             <Link href="/login"
               className={`
@@ -117,7 +117,7 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* Auth — logged in: avatar dropdown */}
+          {/* Auth â€” logged in: avatar dropdown */}
           {isLoggedIn && user && (
             <div className="relative hidden sm:block" ref={menuRef}>
               <button
@@ -147,13 +147,13 @@ export default function Navbar() {
                     <p className="text-xs text-bloom-secondary">Masuk sebagai</p>
                     <p className="text-sm font-semibold text-bloom-text truncate">{user.name}</p>
                     {isAdmin && (
-                      <span className="inline-block mt-1 px-2 py-0.5 bg-bloom-text text-white text-[10px] font-bold rounded-full uppercase tracking-wider">
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-bloom-text text-white text-xs font-bold rounded-full uppercase tracking-wider">
                         Admin
                       </span>
                     )}
                   </div>
 
-                  {/* Admin Panel link — only for admin */}
+                  {/* Admin Panel link â€” only for admin */}
                   {isAdmin && (
                     <Link href="/admin" onClick={() => setMenuOpen(false)}
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-bloom-text bg-bloom-surface hover:bg-bloom-border/40 transition-colors border-b border-bloom-border">

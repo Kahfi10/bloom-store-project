@@ -164,7 +164,6 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       className="relative h-screen min-h-[600px] max-h-[900px] w-full overflow-hidden flex items-center justify-center"
-      style={{ isolation: 'isolate' }}
     >
       <video ref={vaRef} muted playsInline aria-hidden="true" className="hero-video" style={FADE_TRANSITION} />
       <video ref={vbRef} muted playsInline aria-hidden="true" className="hero-video" style={FADE_TRANSITION} />
@@ -209,7 +208,7 @@ export default function HeroSection() {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/45">
-        <span className="text-[11px] uppercase tracking-widest">Scroll</span>
+        <span className="text-xs uppercase tracking-widest">Scroll</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="animate-bounce">
           <path d="M4 6l4 4 4-4" />
         </svg>

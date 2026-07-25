@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -10,7 +10,7 @@ import { formatRupiah } from '@/lib/mockData';
 import { Order, OrderStatus } from '@/types';
 import BackButton from '@/components/ui/BackButton';
 
-// ─── Status config ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Status config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const STATUS_CFG: Record<OrderStatus, { label: string; bg: string; text: string; dot: string }> = {
   DRAFT:     { label: 'Draft',     bg: 'bg-gray-100',   text: 'text-gray-600',       dot: 'bg-gray-400' },
   CONFIRMED: { label: 'Confirmed', bg: 'bg-blue-50',    text: 'text-blue-700',       dot: 'bg-blue-500' },
@@ -29,7 +29,7 @@ const STATUS_NEXT_BTN: Partial<Record<OrderStatus, { to: OrderStatus; label: str
   ],
 };
 
-// ─── Timeline component ─────────────────────────────────────────────────────
+// â”€â”€â”€ Timeline component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function StatusTimeline({ current }: { current: OrderStatus }) {
   const steps: OrderStatus[] = ['DRAFT', 'CONFIRMED', 'COMPLETED'];
   const cancelled = current === 'CANCELLED';
@@ -46,7 +46,7 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
             <div className="flex flex-col items-center gap-1">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border-2 transition-all
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
                 ${done   ? 'bg-bloom-text border-bloom-text text-white' : ''}
                 ${active ? 'bg-white border-bloom-text text-bloom-text shadow-sm' : ''}
                 ${pending? 'bg-bloom-surface border-bloom-border text-bloom-secondary' : ''}`}>
@@ -54,7 +54,7 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
                   ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M2 6l3 3 5-5"/></svg>
                   : i + 1}
               </div>
-              <span className={`text-[10px] font-medium whitespace-nowrap
+              <span className={`text-xs font-medium whitespace-nowrap
                 ${active ? 'text-bloom-text' : 'text-bloom-secondary'}`}>
                 {cfg.label}
               </span>
@@ -75,7 +75,7 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
   );
 }
 
-// ─── Single order card ──────────────────────────────────────────────────────
+// â”€â”€â”€ Single order card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function OrderCard({ order }: { order: Order }) {
   const { updateStatus } = useOrder();
   const { showToast }    = useToast();
@@ -101,7 +101,7 @@ function OrderCard({ order }: { order: Order }) {
               className="text-sm font-bold text-bloom-text hover:opacity-70 transition-opacity font-mono tracking-tight">
               {order.id}
             </Link>
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${cfg.bg} ${cfg.text}`}>
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
               {cfg.label}
             </span>
@@ -120,7 +120,7 @@ function OrderCard({ order }: { order: Order }) {
         <div className="flex flex-wrap gap-2 text-xs text-bloom-secondary">
           {order.items.map(({ product, qty }) => (
             <span key={product.id} className="px-2.5 py-1 bg-bloom-surface border border-bloom-border rounded-full">
-              {product.name} ×{qty}
+              {product.name} Ã—{qty}
             </span>
           ))}
         </div>
@@ -132,7 +132,7 @@ function OrderCard({ order }: { order: Order }) {
           </svg>
           <span className="truncate">
             <strong className="text-bloom-text">{order.shipping.recipientName}</strong>
-            {' — '}{order.shipping.shippingAddress}
+            {' â€” '}{order.shipping.shippingAddress}
           </span>
         </div>
       </div>
@@ -148,7 +148,7 @@ function OrderCard({ order }: { order: Order }) {
           ))}
           <Link href={`/orders/${order.id}`}
             className="ml-auto text-xs text-bloom-secondary hover:text-bloom-text transition-colors">
-            Detail →
+            Detail â†’
           </Link>
         </div>
       )}
@@ -157,11 +157,11 @@ function OrderCard({ order }: { order: Order }) {
       {VALID_TRANSITIONS[order.status].length === 0 && (
         <div className="flex items-center justify-between px-6 py-3 border-t border-bloom-border/60 bg-bloom-surface/30">
           <p className="text-xs text-bloom-secondary italic">
-            {order.status === 'COMPLETED' ? 'Pesanan selesai — tidak dapat diubah.' : 'Pesanan dibatalkan — tidak dapat diaktifkan kembali.'}
+            {order.status === 'COMPLETED' ? 'Pesanan selesai â€” tidak dapat diubah.' : 'Pesanan dibatalkan â€” tidak dapat diaktifkan kembali.'}
           </p>
           <Link href={`/orders/${order.id}`}
             className="text-xs text-bloom-secondary hover:text-bloom-text transition-colors">
-            Detail →
+            Detail â†’
           </Link>
         </div>
       )}
@@ -169,7 +169,7 @@ function OrderCard({ order }: { order: Order }) {
   );
 }
 
-// ─── Page ───────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function OrdersPage() {
   const router   = useRouter();
   const { isLoggedIn } = useAuth();

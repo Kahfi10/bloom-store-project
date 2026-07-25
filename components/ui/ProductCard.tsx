@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { useState } from 'react';
@@ -53,7 +53,7 @@ export default function ProductCard({
   }
 
   function handleAddToCart(e: React.MouseEvent) {
-    e.stopPropagation(); // don't bubble up to card → no navigation
+    e.stopPropagation(); // don't bubble up to card â†’ no navigation
     if (product.stock === 0) return;
 
     setLoading(true);
@@ -74,7 +74,7 @@ export default function ProductCard({
       className="bg-white rounded-card shadow-card card-hover flex flex-col overflow-hidden animate-fade-up border border-bloom-border/40 cursor-pointer"
       style={{ animationDelay: `${animationDelay}ms`, animationFillMode: 'both' }}
     >
-      {/* ── Product Image ──────────────────────────── */}
+      {/* â”€â”€ Product Image â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="relative aspect-square img-zoom-container bg-bloom-surface">
         <Image
           src={product.heroImage}
@@ -86,12 +86,12 @@ export default function ProductCard({
         />
 
         {/* Category badge */}
-        <span className="absolute top-3 left-3 z-10 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-pill text-[11px] font-semibold text-bloom-text tracking-wide shadow-sm">
+        <span className="absolute top-3 left-3 z-10 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-pill text-xs font-semibold text-bloom-text tracking-wide shadow-sm">
           {product.category}
         </span>
 
         {/* Photo count badge */}
-        <span className="absolute top-3 right-3 z-10 px-2 py-0.5 bg-black/35 backdrop-blur-sm rounded-full text-[10px] font-medium text-white">
+        <span className="absolute top-3 right-3 z-10 px-2 py-0.5 bg-black/35 backdrop-blur-sm rounded-full text-xs font-medium text-white">
           {product.images.length} foto
         </span>
 
@@ -105,7 +105,7 @@ export default function ProductCard({
         )}
       </div>
 
-      {/* ── Card Body ──────────────────────────────── */}
+      {/* â”€â”€ Card Body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="flex flex-col flex-1 p-5 gap-3">
         {/* Name + stock */}
         <div className="flex items-start justify-between gap-2">
@@ -120,14 +120,14 @@ export default function ProductCard({
           {product.description}
         </p>
 
-        {/* ── Card Footer ──────────────────────────── */}
+        {/* â”€â”€ Card Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
         <div className="flex items-center justify-between gap-3 pt-2 border-t border-bloom-border/60">
           {/* Price */}
           <span className="text-[17px] font-bold text-bloom-text tracking-tight">
             {formatRupiah(product.price)}
           </span>
 
-          {/* Add to Cart — stopPropagation prevents card navigation */}
+          {/* Add to Cart â€” stopPropagation prevents card navigation */}
           <button
             onClick={handleAddToCart}
             disabled={outOfStock || loading}

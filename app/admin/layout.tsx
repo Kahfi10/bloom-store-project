@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
@@ -64,7 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-gray-950 flex">
-      {/* ── Sidebar ──────────────────────────────────────────── */}
+      {/* â”€â”€ Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <aside className="w-60 flex-shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col">
         {/* Logo */}
         <div className="px-5 py-5 border-b border-gray-800">
@@ -77,7 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </svg>
             <div>
               <p className="text-sm font-bold text-white leading-none">Bloom Admin</p>
-              <p className="text-[10px] text-gray-500 mt-0.5">Panel Administrasi</p>
+              <p className="text-xs text-gray-500 mt-0.5">Panel Administrasi</p>
             </div>
           </Link>
         </div>
@@ -121,7 +121,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* ── Main content ─────────────────────────────────────── */}
+      {/* â”€â”€ Main content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <main className="flex-1 overflow-auto bg-gray-950">
         {children}
       </main>

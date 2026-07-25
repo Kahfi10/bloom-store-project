@@ -13,9 +13,9 @@
   --color-bloom-danger: #ff3b30;
   --color-bloom-overlay: rgba(0, 0, 0, 0.4);
 
-  /* Typography */
-  --font-sans: -apple-system, "SF Pro Display", "Helvetica Neue", Arial,
-    sans-serif;
+  /* Typography — system-ui is the cross-browser safe choice;
+     avoids -apple-system which renders at wrong metrics on Chrome/Windows */
+  --font-sans: system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 
   /* Border Radius */
   --radius-card: 16px;
@@ -37,6 +37,7 @@
 }
 
 html {
+  font-size: 16px;   /* explicit base — prevents Chrome from using a smaller default */
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -46,6 +47,7 @@ body {
   background-color: var(--color-bloom-bg);
   color: var(--color-bloom-text);
   font-family: var(--font-sans);
+  font-size: 1rem;   /* 16px */
   line-height: 1.5;
   min-height: 100vh;
 }

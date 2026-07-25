@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -143,7 +143,7 @@ export default function AdminOrderDetailPage() {
                 { label: 'Alamat',    value: order.shippingAddress },
               ].map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">{label}</p>
+                  <p className="text-xs font-bold text-gray-600 uppercase tracking-wider">{label}</p>
                   <p className="text-sm text-gray-300 mt-0.5 leading-snug">{value}</p>
                 </div>
               ))}
