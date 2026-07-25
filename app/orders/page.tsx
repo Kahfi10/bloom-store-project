@@ -10,29 +10,29 @@ import { formatRupiah } from '@/lib/mockData';
 import { Order, OrderStatus } from '@/types';
 import BackButton from '@/components/ui/BackButton';
 
-// â”€â”€â”€ Status config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Status config
 const STATUS_CFG: Record<OrderStatus, { label: string; bg: string; text: string; dot: string }> = {
-  DRAFT:     { label: 'Draft',     bg: 'bg-gray-100',   text: 'text-gray-600',       dot: 'bg-gray-400' },
-  CONFIRMED: { label: 'Confirmed', bg: 'bg-blue-50',    text: 'text-blue-700',       dot: 'bg-blue-500' },
-  COMPLETED: { label: 'Completed', bg: 'bg-green-50',   text: 'text-bloom-success',  dot: 'bg-bloom-success' },
-  CANCELLED: { label: 'Cancelled', bg: 'bg-red-50',     text: 'text-bloom-danger',   dot: 'bg-bloom-danger' },
+  DRAFT:     { label: 'Draft',     bg: 'bg-gray-100',  text: 'text-gray-600',      dot: 'bg-gray-400' },
+  CONFIRMED: { label: 'Confirmed', bg: 'bg-blue-50',   text: 'text-blue-700',      dot: 'bg-blue-500' },
+  COMPLETED: { label: 'Completed', bg: 'bg-green-50',  text: 'text-bloom-success', dot: 'bg-bloom-success' },
+  CANCELLED: { label: 'Cancelled', bg: 'bg-red-50',    text: 'text-bloom-danger',  dot: 'bg-bloom-danger' },
 };
 
 const STATUS_NEXT_BTN: Partial<Record<OrderStatus, { to: OrderStatus; label: string; cls: string }[]>> = {
   DRAFT: [
-    { to: 'CONFIRMED', label: 'Konfirmasi',  cls: 'bg-blue-600 text-white hover:bg-blue-700' },
-    { to: 'CANCELLED', label: 'Batalkan',    cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
+    { to: 'CONFIRMED', label: 'Konfirmasi', cls: 'bg-blue-600 text-white hover:bg-blue-700' },
+    { to: 'CANCELLED', label: 'Batalkan',   cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
   ],
   CONFIRMED: [
-    { to: 'COMPLETED', label: 'Selesaikan',  cls: 'bg-bloom-success text-white hover:opacity-90' },
-    { to: 'CANCELLED', label: 'Batalkan',    cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
+    { to: 'COMPLETED', label: 'Selesaikan', cls: 'bg-bloom-success text-white hover:opacity-90' },
+    { to: 'CANCELLED', label: 'Batalkan',   cls: 'bg-white border border-bloom-danger text-bloom-danger hover:bg-red-50' },
   ],
 };
 
-// â”€â”€â”€ Timeline component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Timeline
 function StatusTimeline({ current }: { current: OrderStatus }) {
   const steps: OrderStatus[] = ['DRAFT', 'CONFIRMED', 'COMPLETED'];
-  const cancelled = current === 'CANCELLED';
+  const cancelled  = current === 'CANCELLED';
   const currentIdx = steps.indexOf(current);
 
   return (
@@ -42,20 +42,18 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
         const active  = !cancelled && i === currentIdx;
         const pending = cancelled || i > currentIdx;
         const cfg     = STATUS_CFG[step];
-
         return (
           <div key={step} className="flex items-center flex-1 last:flex-none">
             <div className="flex flex-col items-center gap-1">
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all
                 ${done   ? 'bg-bloom-text border-bloom-text text-white' : ''}
                 ${active ? 'bg-white border-bloom-text text-bloom-text shadow-sm' : ''}
-                ${pending? 'bg-bloom-surface border-bloom-border text-bloom-secondary' : ''}`}>
+                ${pending ? 'bg-bloom-surface border-bloom-border text-bloom-secondary' : ''}`}>
                 {done
                   ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M2 6l3 3 5-5"/></svg>
                   : i + 1}
               </div>
-              <span className={`text-xs font-medium whitespace-nowrap
-                ${active ? 'text-bloom-text' : 'text-bloom-secondary'}`}>
+              <span className={`text-xs font-medium whitespace-nowrap ${active ? 'text-bloom-text' : 'text-bloom-secondary'}`}>
                 {cfg.label}
               </span>
             </div>
@@ -75,7 +73,7 @@ function StatusTimeline({ current }: { current: OrderStatus }) {
   );
 }
 
-// â”€â”€â”€ Single order card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Single order card
 function OrderCard({ order }: { order: Order }) {
   const { updateStatus } = useOrder();
   const { showToast }    = useToast();
@@ -99,7 +97,7 @@ function OrderCard({ order }: { order: Order }) {
           <div className="flex items-center gap-3">
             <Link href={`/orders/${order.id}`}
               className="text-sm font-bold text-bloom-text hover:opacity-70 transition-opacity font-mono tracking-tight">
-              {order.id}
+              {order.id.slice(0, 12)}...
             </Link>
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
@@ -113,14 +111,13 @@ function OrderCard({ order }: { order: Order }) {
 
       {/* Body */}
       <div className="px-6 py-4 space-y-4">
-        {/* Timeline */}
         <StatusTimeline current={order.status} />
 
-        {/* Items summary */}
+        {/* Items */}
         <div className="flex flex-wrap gap-2 text-xs text-bloom-secondary">
           {order.items.map(({ product, qty }) => (
             <span key={product.id} className="px-2.5 py-1 bg-bloom-surface border border-bloom-border rounded-full">
-              {product.name} Ã—{qty}
+              {product.name} x{qty}
             </span>
           ))}
         </div>
@@ -132,7 +129,7 @@ function OrderCard({ order }: { order: Order }) {
           </svg>
           <span className="truncate">
             <strong className="text-bloom-text">{order.shipping.recipientName}</strong>
-            {' â€” '}{order.shipping.shippingAddress}
+            {' - '}{order.shipping.shippingAddress}
           </span>
         </div>
       </div>
@@ -148,7 +145,7 @@ function OrderCard({ order }: { order: Order }) {
           ))}
           <Link href={`/orders/${order.id}`}
             className="ml-auto text-xs text-bloom-secondary hover:text-bloom-text transition-colors">
-            Detail â†’
+            Detail &rarr;
           </Link>
         </div>
       )}
@@ -157,11 +154,13 @@ function OrderCard({ order }: { order: Order }) {
       {VALID_TRANSITIONS[order.status].length === 0 && (
         <div className="flex items-center justify-between px-6 py-3 border-t border-bloom-border/60 bg-bloom-surface/30">
           <p className="text-xs text-bloom-secondary italic">
-            {order.status === 'COMPLETED' ? 'Pesanan selesai â€” tidak dapat diubah.' : 'Pesanan dibatalkan â€” tidak dapat diaktifkan kembali.'}
+            {order.status === 'COMPLETED'
+              ? 'Pesanan selesai - tidak dapat diubah.'
+              : 'Pesanan dibatalkan - tidak dapat diaktifkan kembali.'}
           </p>
           <Link href={`/orders/${order.id}`}
             className="text-xs text-bloom-secondary hover:text-bloom-text transition-colors">
-            Detail â†’
+            Detail &rarr;
           </Link>
         </div>
       )}
@@ -169,9 +168,9 @@ function OrderCard({ order }: { order: Order }) {
   );
 }
 
-// â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Page
 export default function OrdersPage() {
-  const router   = useRouter();
+  const router         = useRouter();
   const { isLoggedIn } = useAuth();
   const { orders }     = useOrder();
 
@@ -187,7 +186,6 @@ export default function OrdersPage() {
     <div className="min-h-screen bg-bloom-bg pt-20">
       <div className="max-w-[900px] mx-auto px-6 py-10">
 
-        {/* Header */}
         <div className="mb-8 animate-fade-up">
           <BackButton href="/" label="Beranda" className="mb-4" />
           <h1 className="text-[clamp(1.6rem,4vw,2.2rem)] font-bold text-bloom-text tracking-tight">

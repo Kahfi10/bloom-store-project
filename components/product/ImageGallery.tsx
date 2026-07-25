@@ -110,29 +110,27 @@ export default function ImageGallery({ images, name }: ImageGalleryProps) {
         )}
       </div>
 
-      {/* ── Thumbnail Strip ─────────────────────────── */}
+      {/* Thumbnail Strip */}
       {images.length > 1 && (
-        <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex gap-3 overflow-x-auto pb-1 pt-1" style={{ scrollbarWidth: 'none' }}>
           {images.map((src, i) => (
             <button
               key={i}
               onClick={() => switchImage(i)}
               aria-label={`Lihat foto ${i + 1}`}
+              className="relative flex-shrink-0 focus:outline-none"
               style={{
                 transition: 'opacity 0.2s ease, transform 0.2s ease',
-                opacity: i === activeIndex ? 1 : 0.5,
+                opacity:   i === activeIndex ? 1 : 0.45,
                 transform: i === activeIndex ? 'scale(1)' : 'scale(0.95)',
               }}
-              className="relative flex-shrink-0 rounded-xl hover:opacity-80 focus:outline-none"
             >
-              {/* Image with overflow:hidden on its own div — border is separate */}
               <div
-                className="w-16 h-16 rounded-xl overflow-hidden relative"
+                className="w-20 h-20 rounded-2xl overflow-hidden bg-bloom-surface"
                 style={{
-                  // border drawn via box-shadow (outside), so it's NOT clipped by overflow:hidden
                   boxShadow: i === activeIndex
                     ? '0 0 0 2.5px #1D1D1F'
-                    : '0 0 0 1px rgba(0,0,0,0.08)',
+                    : '0 0 0 1px rgba(0,0,0,0.1)',
                   transition: 'box-shadow 0.2s ease',
                 }}
               >
@@ -141,7 +139,7 @@ export default function ImageGallery({ images, name }: ImageGalleryProps) {
                   alt={`${name} thumbnail ${i + 1}`}
                   fill
                   className="object-cover"
-                  sizes="64px"
+                  sizes="80px"
                 />
               </div>
             </button>
