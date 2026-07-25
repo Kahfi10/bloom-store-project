@@ -1,0 +1,7 @@
+-- CreateTable
+CREATE TABLE "AdminLoginAttempt" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "ip" TEXT NOT NULL,
+    "success" BOOLEAN NOT NULL,
+    "attemptAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

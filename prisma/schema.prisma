@@ -74,3 +74,11 @@ model UserSession {
   logoutAt  DateTime?
   isActive  Boolean   @default(true)
 }
+
+// ─── AdminLoginAttempt (rate limiting) ─────────────────────────────────────
+model AdminLoginAttempt {
+  id        Int      @id @default(autoincrement())
+  ip        String
+  success   Boolean
+  attemptAt DateTime @default(now())
+}

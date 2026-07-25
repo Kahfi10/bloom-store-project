@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -17,11 +17,12 @@ export default function LoginPage() {
   const [errors,     setErrors]     = useState<{ credential?: string; password?: string; form?: string }>({});
   const [loading,    setLoading]    = useState(false);
 
-  // Redirect if already logged in
-  if (isLoggedIn) {
-    router.replace('/');
-    return null;
-  }
+  // Redirect if already logged in — must be in useEffect, NOT during render
+  useEffect(() => {
+    if (isLoggedIn) router.replace('/');
+  }, [isLoggedIn, router]);
+
+  if (isLoggedIn) return null;
 
   function validate(): boolean {
     const e: typeof errors = {};
