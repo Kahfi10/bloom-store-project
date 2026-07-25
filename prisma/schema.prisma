@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Product ───────────────────────────────────────────────────────────────
+model Product {
+  id              Int         @id @default(autoincrement())
+  name            String
+  slug            String      @unique
+  category        String
+  price           Int         // IDR, harus > 0
+  stock           Int         // harus >= 0
+  description     String
+  heroImage       String
+  images          String      // JSON array disimpan sebagai string
+  // Flower info
+  infoOrigin      String
+  infoLatinName   String
+  infoMeaning     String
+  infoHistory     String
+  infoFunFact     String
+  infoBloomSeason String
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  orderItems      OrderItem[]
+}
+
+// ─── Order ─────────────────────────────────────────────────────────────────
+model Order {
+  id              String      @id @default(cuid())
+  status          String      @default("DRAFT") // DRAFT | CONFIRMED | COMPLETED | CANCELLED
+  totalPrice      Int
+  // Shipping info
+  recipientName   String
+  shippingAddress String
+  phoneNumber     String
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  items           OrderItem[]
+}
+
+// ─── OrderItem ─────────────────────────────────────────────────────────────
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  qty       Int
+  price     Int     // snapshot harga saat order dibuat
+
+  orderId   String
+  productId Int
+
+  order     Order   @relation(fields: [orderId],   references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+}

@@ -42,3 +42,7 @@ next-env.d.ts
 
 # assets — large binary files (images & videos), add locally after clone
 /public/assets
+
+# database
+prisma/*.db
+prisma/*.db-journal
