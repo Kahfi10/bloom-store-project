@@ -224,12 +224,12 @@ export const products: Product[] = [
     description:
       "Bunga kecil nan memesona dengan tampilan minimalis yang elegan. Sempurna sebagai rangkaian mandiri maupun pelengkap buket untuk sentuhan akhir yang airy dan feminin.",
     heroImage:
-      "/assets/images/baby%27s%20breath/armennano-flowers-6885306.jpg",
+      "/assets/images/babys-breath/armennano-flowers-6885306.jpg",
     images: [
-      "/assets/images/baby%27s%20breath/armennano-flowers-6885306.jpg",
-      "/assets/images/baby%27s%20breath/digitalphotolinds-flowers-1216049.jpg",
-      "/assets/images/baby%27s%20breath/neelam279-chrysanthemum-6149833.jpg",
-      "/assets/images/baby%27s%20breath/tfirdous051020011-coffee-6401190.jpg",
+      "/assets/images/babys-breath/armennano-flowers-6885306.jpg",
+      "/assets/images/babys-breath/digitalphotolinds-flowers-1216049.jpg",
+      "/assets/images/babys-breath/neelam279-chrysanthemum-6149833.jpg",
+      "/assets/images/babys-breath/tfirdous051020011-coffee-6401190.jpg",
     ],
     info: {
       origin: "Eropa Tengah, Asia, dan Afrika Utara",
