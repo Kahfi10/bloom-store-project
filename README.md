@@ -2,8 +2,6 @@
 
 <br/>
 
-<img src="public/assets/readme/logo.png" alt="Bloom Store Logo" width="80" />
-
 # 🌸 Bloom Store
 
 ### Toko Bunga Premium — Advanced Software Testing & QA Project
