@@ -320,37 +320,6 @@ npm run test:e2e:api        # 18 API test cases
 
 ---
 
-## 🚢 Deployment
-
-**Production:** Oracle Cloud + Nginx + PM2 + DuckDNS
-
-```bash
-# Di server Oracle Cloud
-git clone https://github.com/Kahfi10/bloom-store-project.git /var/www/bloom-store
-cd /var/www/bloom-store
-
-# Setup
-npm install
-cat > .env.production << EOF
-DATABASE_URL="file:/var/www/bloom-store/prisma/prod.db"
-ADMIN_USERNAME="your_admin"
-ADMIN_PASSWORD="your_password"
-ADMIN_SECRET_KEY="your_secret"
-ADMIN_ACCESS_CODE="your_code"
-EOF
-
-# Database
-DATABASE_URL="file:/var/www/bloom-store/prisma/prod.db" npx prisma migrate deploy
-DATABASE_URL="file:/var/www/bloom-store/prisma/prod.db" npx ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
-
-# Build & Start
-npm run build
-pm2 start ecosystem.config.js --env production
-pm2 save
-```
-
----
-
 ## 👥 Tim Pengembang
 
 <table>
