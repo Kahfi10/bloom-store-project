@@ -1,0 +1,35 @@
+{
+  "validUser": {
+    "credential": "user",
+    "password": "user123",
+    "name": "Pengguna Demo"
+  },
+  "adminUser": {
+    "credential": "admin",
+    "password": "admin123",
+    "name": "Admin Bloom"
+  },
+  "invalidUser": {
+    "credential": "user",
+    "password": "wrongpassword123"
+  },
+  "products": {
+    "first": {
+      "name": "Anggrek Bulan",
+      "slug": "anggrek-bulan",
+      "price": "Rp 150.000"
+    },
+    "second": {
+      "name": "Buket Campuran",
+      "slug": "buket-campuran"
+    }
+  },
+  "shipping": {
+    "recipientName": "Test Penerima",
+    "address": "Jl. Test No. 1, Makassar",
+    "phone": "081234567890"
+  },
+  "api": {
+    "baseUrl": "http://localhost:3000"
+  }
+}
