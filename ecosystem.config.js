@@ -10,7 +10,8 @@ module.exports = {
       exec_mode: 'fork',
       env_production: {
         NODE_ENV: 'production',
-        PORT: 3001,
+        PORT: 3002,
+        DATABASE_URL: 'file:/var/www/bloom-store/prisma/prod.db',
         DATABASE_URL: 'file:/var/www/bloom-store/prisma/prod.db',
       },
       error_file: '/var/log/pm2/bloom-store-error.log',
