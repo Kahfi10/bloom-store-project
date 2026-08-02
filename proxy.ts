@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? 'bloom_admin_2025';
+// Must match ADMIN_SECRET_KEY in ecosystem.config.js and api/admin/login/route.ts
+const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY ?? 'bloom_secret_2025_kahfi';
 const PUBLIC_PATHS = ['/admin/login', '/api/admin/login'];
 
 export function proxy(request: NextRequest) {
