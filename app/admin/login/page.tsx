@@ -43,7 +43,6 @@ export default function AdminLoginPage() {
         setError(data.message);
         setAttempts(a => a + 1);
         if (data.locked) setLocked(true);
-        // Clear sensitive fields on failure
         setForm(f => ({ ...f, password: '', accessCode: '' }));
       }
     } catch {
@@ -68,13 +67,19 @@ export default function AdminLoginPage() {
             </svg>
             <span className="text-xl font-bold text-white tracking-tight">Bloom Admin</span>
           </div>
-          <p className="text-sm text-gray-500">Akses terbatas â€” hanya untuk administrator</p>
+          <p className="text-sm text-gray-500">Akses terbatas - hanya untuk administrator</p>
         </div>
 
         {/* Lockout notice */}
         {locked && (
           <div className="mb-4 p-4 bg-red-950 border border-red-800 rounded-2xl text-center">
-            <div className="text-2xl mb-2">ðŸ”’</div>
+            <div className="flex items-center justify-center mb-2">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="1.5" strokeLinecap="round" className="text-red-400">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+            </div>
             <p className="text-sm font-semibold text-red-300">Akses Terkunci</p>
             <p className="text-xs text-red-500 mt-1">
               Terlalu banyak percobaan gagal. Coba lagi setelah 15 menit.
@@ -88,12 +93,13 @@ export default function AdminLoginPage() {
 
           {/* Security badge */}
           <div className="flex items-center gap-2 p-2.5 bg-gray-800/60 rounded-xl border border-gray-700/60">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" className="text-emerald-400 flex-shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="1.8" strokeLinecap="round" className="text-emerald-400 flex-shrink-0">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               <path d="M9 12l2 2 4-4"/>
             </svg>
             <p className="text-xs text-gray-500">
-              Koneksi aman Â· 3 faktor verifikasi diperlukan
+              Koneksi aman &middot; 3 faktor verifikasi diperlukan
             </p>
           </div>
 
@@ -137,7 +143,7 @@ export default function AdminLoginPage() {
                 type={showPw ? 'text' : 'password'} value={form.password} disabled={locked}
                 autoComplete="current-password"
                 onChange={e => set('password', e.target.value)}
-                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                placeholder="Masukkan password"
                 className="w-full h-11 px-4 pr-11 rounded-xl bg-gray-800 border border-gray-700 text-white text-sm placeholder-gray-600 outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 transition-all disabled:opacity-40"
               />
               <button type="button" onClick={() => setShowPw(v => !v)}
@@ -172,17 +178,30 @@ export default function AdminLoginPage() {
           {/* Submit */}
           <button type="submit" disabled={loading || locked}
             className="w-full h-11 rounded-xl bg-white text-gray-900 font-semibold text-sm hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 mt-2">
-            {loading
-              ? <><svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" strokeOpacity="0.25"/><path d="M12 2a10 10 0 0110 10" strokeLinecap="round"/></svg>Memverifikasi...</>
-              : locked
-              ? 'ðŸ”’ Akses Terkunci'
-              : 'Masuk ke Panel Admin'
-            }
+            {loading ? (
+              <>
+                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" strokeOpacity="0.25"/>
+                  <path d="M12 2a10 10 0 0110 10" strokeLinecap="round"/>
+                </svg>
+                Memverifikasi...
+              </>
+            ) : locked ? (
+              <span className="flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/>
+                  <path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+                Akses Terkunci
+              </span>
+            ) : (
+              'Masuk ke Panel Admin'
+            )}
           </button>
         </form>
 
         <p className="text-center text-xs text-gray-700 mt-6">
-          Bloom Store Admin Â· Sistem terproteksi
+          Bloom Store Admin &middot; Sistem terproteksi
         </p>
       </div>
     </div>
