@@ -10,13 +10,13 @@ module.exports = {
       exec_mode: 'fork',
       env_production: {
         NODE_ENV: 'production',
-        PORT: 3002,
-        DATABASE_URL: 'file:/var/www/bloom-store/prisma/prod.db',
-        // Admin credentials — langsung di PM2 env agar pasti terbaca
-        ADMIN_USERNAME:    'bloom_admin',
-        ADMIN_PASSWORD:    'BloomAdmin2025!',
-        ADMIN_SECRET_KEY:  'bloom_secret_2025_kahfi',
-        ADMIN_ACCESS_CODE: 'BLOOM2025',
+        PORT: process.env.PORT || 3002,
+        DATABASE_URL: process.env.DATABASE_URL || 'file:/var/www/bloom-store/prisma/prod.db',
+        // Admin credentials must be supplied via /var/www/bloom-store/.env.production or server environment
+        ADMIN_USERNAME:    process.env.ADMIN_USERNAME,
+        ADMIN_PASSWORD:    process.env.ADMIN_PASSWORD,
+        ADMIN_SECRET_KEY:  process.env.ADMIN_SECRET_KEY,
+        ADMIN_ACCESS_CODE: process.env.ADMIN_ACCESS_CODE,
       },
       error_file: '/var/log/pm2/bloom-store-error.log',
       out_file: '/var/log/pm2/bloom-store-out.log',

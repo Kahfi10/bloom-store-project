@@ -44,5 +44,9 @@ next-env.d.ts
 /public/assets
 
 # database
-prisma/*.db
-prisma/*.db-journal
+**/*.db
+**/*.db-journal
+**/*.sqlite
+**/*.sqlite3
+backups/
+

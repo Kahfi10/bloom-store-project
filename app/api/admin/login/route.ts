@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { createAdminToken, timingSafeEqualStrings } from '@/lib/security/token';
 
 const MAX_ATTEMPTS   = 5;
 const WINDOW_MINUTES = 15;
@@ -62,11 +63,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Server tidak terkonfigurasi.' }, { status: 503 });
     }
 
-    // ── 4. Verifikasi kredensial ─────────────────────────────────────────────
-    const credentialsOk =
-      username.trim()   === ADMIN_USERNAME &&
-      password          === ADMIN_PASSWORD &&
-      accessCode.trim().toUpperCase() === ADMIN_ACCESS_CODE.toUpperCase();
+    // ── 4. Verifikasi kredensial (timing-safe) ────────────────────────────────
+    const usernameMatch = timingSafeEqualStrings(username.trim(), ADMIN_USERNAME);
+    const passwordMatch = timingSafeEqualStrings(password, ADMIN_PASSWORD);
+    const codeMatch     = timingSafeEqualStrings(accessCode.trim().toUpperCase(), ADMIN_ACCESS_CODE.toUpperCase());
+    const credentialsOk = usernameMatch && passwordMatch && codeMatch;
 
     // Catat attempt (don't let logging failure block the response)
     try {
@@ -81,9 +82,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: msg, locked: remaining <= 0 }, { status: 401 });
     }
 
-    // ── 5. Set session cookie ────────────────────────────────────────────────
+    // ── 5. Set session cookie with signed HMAC token ─────────────────────────
+    const sessionToken = createAdminToken(ADMIN_SECRET_KEY);
     const res = NextResponse.json({ success: true, message: 'Login admin berhasil.' });
-    res.cookies.set('admin_session', ADMIN_SECRET_KEY, {
+    res.cookies.set('admin_session', sessionToken, {
       httpOnly: true,
       secure:   process.env.NODE_ENV === 'production',
       sameSite: 'strict',

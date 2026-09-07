@@ -1,13 +1,13 @@
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { verifyAdminToken } from '@/lib/security/token';
 
 const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY;
 
 /** Returns true if the request carries a valid admin session cookie. */
 export function isAdminRequest(req: NextRequest): boolean {
-  if (!ADMIN_SECRET) return false;
   const cookie = req.cookies.get('admin_session')?.value;
-  return cookie === ADMIN_SECRET;
+  return verifyAdminToken(cookie, ADMIN_SECRET);
 }
 
 /** Returns a 401 JSON response for unauthorized admin requests. */
@@ -17,3 +17,4 @@ export function unauthorizedResponse() {
     { status: 401 }
   );
 }
+

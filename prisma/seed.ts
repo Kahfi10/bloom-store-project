@@ -228,16 +228,19 @@ async function main() {
   await prisma.user.deleteMany();
 
   // ── Seed users ─────────────────────────────────────────────────────────
-  const adminHash = await bcrypt.hash('admin123', 10);
-  const userHash  = await bcrypt.hash('user123',  10);
+  const adminRawPassword = process.env.ADMIN_SEED_PASSWORD || (process.env.NODE_ENV === 'production' ? require('crypto').randomBytes(16).toString('hex') : 'AdminBloom#Secure2025!');
+  const userRawPassword  = process.env.USER_SEED_PASSWORD  || 'UserBloom#Demo2025!';
+
+  const adminHash = await bcrypt.hash(adminRawPassword, 10);
+  const userHash  = await bcrypt.hash(userRawPassword,  10);
 
   await prisma.user.createMany({
     data: [
       {
         id:       1,
         name:     'Admin Bloom',
-        username: 'admin',
-        email:    'admin@bloom.com',
+        username: process.env.ADMIN_SEED_USERNAME || 'admin',
+        email:    process.env.ADMIN_SEED_EMAIL    || 'admin@bloom.com',
         password: adminHash,
         role:     'admin',
       },
@@ -252,6 +255,9 @@ async function main() {
     ],
   });
   console.log('✅ Seeded 2 users (admin + demo)');
+  if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_SEED_PASSWORD) {
+    console.log(`🔑 Generated secure production admin password: ${adminRawPassword}`);
+  }
 
   // Insert products
   for (const product of products) {

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
+import { createAdminToken } from '@/lib/security/token';
 
-const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY ?? 'bloom_admin_2025';
+const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY;
 
 export async function POST(req: NextRequest) {
   try {
@@ -53,10 +54,11 @@ export async function POST(req: NextRequest) {
       message: `Selamat datang, ${user.name}!`,
     });
 
-    // ── If admin, ALSO set admin session cookie ────────────────────────────
+    // ── If admin, ALSO set signed admin session cookie ─────────────────────
     // So navigating to /admin works immediately without a second login
     if (user.role === 'admin') {
-      res.cookies.set('admin_session', ADMIN_SECRET_KEY, {
+      const sessionToken = createAdminToken(ADMIN_SECRET_KEY);
+      res.cookies.set('admin_session', sessionToken, {
         httpOnly: true,
         secure:   process.env.NODE_ENV === 'production',
         sameSite: 'strict',
