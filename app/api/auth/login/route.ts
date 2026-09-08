@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
 import { createAdminToken } from '@/lib/security/token';
+import { applyRateLimit, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 const ADMIN_SECRET_KEY = process.env.ADMIN_SECRET_KEY;
 
 export async function POST(req: NextRequest) {
+  // Rate limit protection
+  const rateLimitRes = applyRateLimit(req, 'auth_login', RATE_LIMITS.AUTH_LOGIN);
+  if (rateLimitRes) return rateLimitRes;
+
   try {
     const { credential, password } = await req.json();
 

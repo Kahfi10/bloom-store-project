@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { applyRateLimit, RATE_LIMITS } from '@/lib/security/rateLimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,9 @@ const VALID_TRANSITIONS: Record<string, string[]> = {
 
 // ─── POST /api/orders ───────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
+  const rateLimitRes = applyRateLimit(req, 'orders_create', RATE_LIMITS.ORDERS_POST);
+  if (rateLimitRes) return rateLimitRes;
+
   try {
     const body = await req.json();
     const { items, recipientName, shippingAddress, phoneNumber } = body;
