@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { isAdminRequest, unauthorizedResponse } from '@/lib/adminAuth';
+import { sanitizeFilePath, isValidSlug } from '@/lib/security/sanitize';
 
 function parseProduct(p: { images: string; [key: string]: unknown }) {
   return { ...p, images: JSON.parse(p.images) as string[] };
@@ -66,6 +67,18 @@ export async function PATCH(
       return error400('Harga produk harus berupa angka lebih dari 0.');
     if (stock !== undefined && (typeof stock !== 'number' || stock < 0 || !Number.isInteger(stock)))
       return error400('Stok produk harus berupa bilangan bulat tidak negatif.');
+    if (slug !== undefined && !isValidSlug(slug))
+      return error400('Format slug tidak valid.');
+    if (heroImage !== undefined && !sanitizeFilePath(heroImage).valid)
+      return error400('Path heroImage tidak valid atau mengandung karakter traversal.');
+    if (images !== undefined) {
+      if (!Array.isArray(images) || images.length === 0) return error400('Images harus berupa array tidak kosong.');
+      for (const img of images) {
+        if (typeof img !== 'string' || !sanitizeFilePath(img).valid) {
+          return error400('Salah satu path image tidak valid.');
+        }
+      }
+    }
 
     const updateData: Record<string, unknown> = {};
     if (name            !== undefined) updateData.name            = name;

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { isAdminRequest, unauthorizedResponse } from '@/lib/adminAuth';
+import { sanitizeFilePath, isValidSlug } from '@/lib/security/sanitize';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,9 +66,22 @@ export async function POST(req: NextRequest) {
     if (!Array.isArray(images) || images.length === 0)
       return error400('Minimal 1 gambar produk wajib disertakan.');
 
-    // Slug uniqueness
-    const existing = await prisma.product.findUnique({ where: { slug } });
+    // Slug uniqueness & format
+    if (!isValidSlug(slug.trim())) return error400('Format slug produk tidak valid.');
+    const existing = await prisma.product.findUnique({ where: { slug: slug.trim() } });
     if (existing) return error400(`Slug '${slug}' sudah digunakan produk lain.`);
+
+    // Path traversal check on heroImage and images
+    const heroCheck = sanitizeFilePath(heroImage.trim());
+    if (!heroCheck.valid) {
+      return error400('Path heroImage tidak valid atau mengandung karakter traversal berbahaya.');
+    }
+
+    for (const img of images) {
+      if (typeof img !== 'string' || !sanitizeFilePath(img.trim()).valid) {
+        return error400('Salah satu path gambar produk tidak valid atau mengandung path traversal.');
+      }
+    }
 
     const product = await prisma.product.create({
       data: {
