@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
 import { applyRateLimit, RATE_LIMITS } from '@/lib/security/rateLimit';
+import { validateRegisterInput } from '@/lib/validations/schemas';
+import { serializeSafeUser } from '@/lib/security/serializers';
 
 export async function POST(req: NextRequest) {
   // Rate limit protection
@@ -9,18 +11,19 @@ export async function POST(req: NextRequest) {
   if (rateLimitRes) return rateLimitRes;
 
   try {
-    const { name, username, email, password } = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return err400('Format JSON request tidak valid.');
+    }
 
-    // Validation
-    if (!name?.trim())     return err400('Nama wajib diisi.');
-    if (!username?.trim()) return err400('Username wajib diisi.');
-    if (!email?.trim())    return err400('Email wajib diisi.');
-    if (!password)         return err400('Password wajib diisi.');
-    if (password.length < 6) return err400('Password minimal 6 karakter.');
-    if (!/^[a-zA-Z0-9_]+$/.test(username.trim()))
-      return err400('Username hanya boleh huruf, angka, dan underscore.');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
-      return err400('Format email tidak valid.');
+    const validation = validateRegisterInput(body);
+    if (!validation.success || !validation.data) {
+      return err400(validation.error || 'Data registrasi tidak valid.');
+    }
+
+    const { name, username, email, password } = validation.data;
 
     // Check uniqueness
     const [existingUsername, existingEmail] = await Promise.all([
@@ -46,7 +49,7 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { success: true, data: user, message: `Akun berhasil dibuat! Selamat datang, ${user.name}.` },
+      { success: true, data: serializeSafeUser(user), message: `Akun berhasil dibuat! Selamat datang, ${user.name}.` },
       { status: 201 }
     );
   } catch (err) {

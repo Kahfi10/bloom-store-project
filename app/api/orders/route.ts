@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { applyRateLimit, RATE_LIMITS } from '@/lib/security/rateLimit';
+import { validateOrderInput } from '@/lib/validations/schemas';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,27 +19,20 @@ export async function POST(req: NextRequest) {
   if (rateLimitRes) return rateLimitRes;
 
   try {
-    const body = await req.json();
-    const { items, recipientName, shippingAddress, phoneNumber } = body;
-
-    // ── Validasi field pengiriman ──────────────────────────────────────
-    if (!recipientName?.trim())    return error400('Nama penerima wajib diisi.');
-    if (!shippingAddress?.trim())  return error400('Alamat pengiriman wajib diisi.');
-    if (!phoneNumber?.trim())      return error400('Nomor telepon wajib diisi.');
-    if (!/^\+?[\d\s\-()]{8,15}$/.test(phoneNumber.trim()))
-      return error400('Format nomor telepon tidak valid.');
-
-    // ── Validasi items (basic checks outside transaction) ──────────────
-    if (!Array.isArray(items) || items.length === 0)
-      return error400('Keranjang kosong, tidak dapat membuat pesanan.');
-
-    for (const item of items) {
-      const { qty } = item;
-      if (!Number.isInteger(qty) || qty < 1)
-        return error400(`Jumlah item tidak valid. Minimum 1 unit.`);
-      if (qty > 10)
-        return error400(`Maksimum pembelian 10 unit per produk.`);
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return error400('Format JSON request tidak valid.');
     }
+
+    // Strict input validation (Poin 6)
+    const validation = validateOrderInput(body);
+    if (!validation.success || !validation.data) {
+      return error400(validation.error || 'Data pesanan tidak valid.');
+    }
+
+    const { items, recipientName, shippingAddress, phoneNumber } = validation.data;
 
     // ── Buat order + validasi stok di dalam transaction (BUG-07 fix) ───
     let order;
