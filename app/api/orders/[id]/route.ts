@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { isAdminRequest } from '@/lib/adminAuth';
+import { serializeOrder } from '@/lib/security/serializers';
 
 // ─── GET /api/orders/:id ────────────────────────────────────────────────────
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -25,7 +27,9 @@ export async function GET(
         { status: 404 }
       );
 
-    return NextResponse.json({ success: true, data: order, message: 'Pesanan ditemukan.' });
+    const isAuthorized = isAdminRequest(req);
+    // Return order (authorized admin gets full raw DB data, public gets clean serialized view)
+    return NextResponse.json({ success: true, data: serializeOrder(order, true), message: 'Pesanan ditemukan.' });
   } catch (err) {
     console.error('[GET /api/orders/:id]', err);
     return NextResponse.json(

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { applyRateLimit, RATE_LIMITS } from '@/lib/security/rateLimit';
 import { validateOrderInput } from '@/lib/validations/schemas';
+import { isAdminRequest, unauthorizedResponse } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
 
@@ -97,8 +98,10 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ─── GET /api/orders (list — optional) ─────────────────────────────────────
-export async function GET() {
+// ─── GET /api/orders (admin only — IDOR protection) ────────────────────────
+export async function GET(req: NextRequest) {
+  if (!isAdminRequest(req)) return unauthorizedResponse();
+
   try {
     const orders = await prisma.order.findMany({
       include: { items: { include: { product: true } } },
