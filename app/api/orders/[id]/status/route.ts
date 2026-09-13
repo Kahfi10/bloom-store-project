@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { isAdminRequest } from '@/lib/adminAuth';
 
 // ─── Valid status transitions (PRD §Modul 5) ───────────────────────────────
 const VALID_TRANSITIONS: Record<string, string[]> = {
@@ -27,6 +28,23 @@ export async function PATCH(
     if (!newStatus?.trim()) return error400('Status baru wajib disertakan.');
     if (!ALL_STATUSES.includes(newStatus))
       return error400(`Status '${newStatus}' tidak valid. Status yang tersedia: ${ALL_STATUSES.join(', ')}.`);
+
+    // ── Payment server & authorization check (Poin 12) ───────────────────
+    // Changing order to CONFIRMED or COMPLETED requires admin session or verified internal token in production
+    const isConfirming = newStatus === 'CONFIRMED' || newStatus === 'COMPLETED';
+    if (isConfirming && process.env.NODE_ENV === 'production') {
+      const isAuthorized = isAdminRequest(req) || req.headers.get('x-payment-secret') === process.env.ADMIN_SECRET_KEY;
+      if (!isAuthorized) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Unauthorized',
+            message: 'Konfirmasi pembayaran harus melalui server pembayaran resmi atau otorisasi admin.',
+          },
+          { status: 401 }
+        );
+      }
+    }
 
     // Cari pesanan
     const order = await prisma.order.findUnique({ where: { id } });
