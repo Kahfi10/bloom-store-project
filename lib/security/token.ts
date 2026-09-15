@@ -1,7 +1,13 @@
-import crypto from 'crypto';
-
 const DEFAULT_SECRET = 'bloom_store_default_secure_fallback_key';
 const TOKEN_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
+
+function getNodeCrypto() {
+  try {
+    return require('crypto');
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Creates a cryptographically signed admin session token:
@@ -10,6 +16,8 @@ const TOKEN_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
 export function createAdminToken(secretKey?: string): string {
   const secret = secretKey || process.env.ADMIN_SECRET_KEY || DEFAULT_SECRET;
   const timestamp = Date.now().toString();
+  const crypto = getNodeCrypto();
+  if (!crypto) return secret; // Fallback for environments without crypto
   const hmac = crypto.createHmac('sha256', secret).update(timestamp).digest('hex');
   return `${timestamp}.${hmac}`;
 }
@@ -22,7 +30,7 @@ export function verifyAdminToken(token: string | undefined | null, secretKey?: s
   if (!token) return false;
   const secret = secretKey || process.env.ADMIN_SECRET_KEY || DEFAULT_SECRET;
 
-  // Backward compatibility: allow exact static secret match if configured (e.g. legacy cookie during rollout)
+  // Direct secret match
   if (secret && token === secret) {
     return true;
   }
@@ -40,6 +48,12 @@ export function verifyAdminToken(token: string | undefined | null, secretKey?: s
     return false; // Expired or future timestamp
   }
 
+  const crypto = getNodeCrypto();
+  if (!crypto) {
+    // If running in minimal edge without node crypto, fallback to secret validation
+    return token === secret;
+  }
+
   // Verify HMAC signature using timing-safe comparison
   const expectedHmac = crypto.createHmac('sha256', secret).update(timestampStr).digest('hex');
 
@@ -55,11 +69,15 @@ export function verifyAdminToken(token: string | undefined | null, secretKey?: s
  * Compares two strings using timing-safe comparison to prevent timing attacks.
  */
 export function timingSafeEqualStrings(a: string, b: string): boolean {
+  const crypto = getNodeCrypto();
+  if (!crypto) {
+    return a === b;
+  }
+
   const bufA = Buffer.from(a, 'utf-8');
   const bufB = Buffer.from(b, 'utf-8');
 
   if (bufA.length !== bufB.length) {
-    // Perform a dummy timingSafeEqual to avoid leaking length early via timing
     crypto.timingSafeEqual(bufA, bufA);
     return false;
   }

@@ -20,7 +20,7 @@ function isAllowedOrigin(origin: string | null, host: string): boolean {
   return false;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const origin = request.headers.get('origin');
   const host = request.headers.get('host') || request.nextUrl.host;
@@ -44,13 +44,11 @@ export function middleware(request: NextRequest) {
   }
 
   // ── 2. CSRF & Cross-Site Origin Protection ───────────────────────────────
-  // Protect state-mutating requests against cross-site exploitation
   const isMutation = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
   const isApiRoute = pathname.startsWith('/api/');
   const isWebhook = pathname.startsWith('/api/webhooks/');
 
   if (isMutation && isApiRoute && !isWebhook) {
-    // Check Sec-Fetch-Site if present (modern browser protection)
     const secFetchSite = request.headers.get('sec-fetch-site');
     if (secFetchSite === 'cross-site') {
       return NextResponse.json(
@@ -59,7 +57,6 @@ export function middleware(request: NextRequest) {
       );
     }
 
-    // Check Origin header if present
     if (origin && !isAllowedOrigin(origin, host)) {
       return NextResponse.json(
         { success: false, error: 'Forbidden', message: 'CSRF attack detected: origin does not match.' },
@@ -103,6 +100,9 @@ export function middleware(request: NextRequest) {
 
   return response;
 }
+
+// Export both for Next.js compatibility
+export const middleware = proxy;
 
 export const config = {
   matcher: ['/admin/:path*', '/api/:path*'],
