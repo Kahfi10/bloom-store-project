@@ -62,14 +62,11 @@ echo "[5/8] Cek environment file..."
 if [ ! -f "$APP_DIR/.env.production" ]; then
   echo ""
   echo "⚠  FILE .env.production BELUM ADA!"
-  echo "   Buat file $APP_DIR/.env.production dengan isi:"
-  echo "   DATABASE_URL=file:/var/www/bloom-store/prisma/prod.db"
-  echo "   ADMIN_USERNAME=bloom_admin"
-  echo "   ADMIN_PASSWORD=PasswordKamu"
-  echo "   ADMIN_SECRET_KEY=SecretKey"
-  echo "   ADMIN_ACCESS_CODE=KodeAkses"
+  echo "   Jalankan perintah ini untuk menghasilkan kredensial acak berkeamanan tinggi:"
+  echo "   npm run security:gen-secrets"
+  echo "   Lalu buat file $APP_DIR/.env.production dan masukkan kredensial tersebut."
   echo ""
-  echo "   Jalankan ulang script setelah file dibuat."
+  echo "   Jalankan ulang script deploy.sh setelah file dibuat."
   exit 1
 fi
 echo ".env.production ditemukan ✓"

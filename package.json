@@ -21,6 +21,7 @@
     "db:test-restore": "ts-node scripts/test-restore.ts",
     "security:gen-secrets": "ts-node scripts/generate-secrets.ts",
     "test:security": "jest __tests__/securityAudit.test.ts",
+    "security:check": "ts-node scripts/security-check.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {
