@@ -82,14 +82,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: msg, locked: remaining <= 0 }, { status: 401 });
     }
 
-    // ── 5. Set session cookie with signed HMAC token ─────────────────────────
+    // ── 5. Set session cookie with signed HMAC token (Session cookie: expires on browser close) ──
     const sessionToken = createAdminToken(ADMIN_SECRET_KEY);
     const res = NextResponse.json({ success: true, message: 'Login admin berhasil.' });
     res.cookies.set('admin_session', sessionToken, {
       httpOnly: true,
       secure:   process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge:   60 * 60 * 8,
       path:     '/',
     });
     return res;

@@ -26,13 +26,17 @@ const SESSION_ID_KEY = 'bloom_session_id';
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  // Restore session from localStorage on mount
+  // Restore session from sessionStorage on mount (cleans up any legacy localStorage)
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(SESSION_KEY);
+      // Clean up legacy persistent localStorage if present
+      localStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(SESSION_ID_KEY);
+
+      const stored = sessionStorage.getItem(SESSION_KEY);
       if (stored) setUser(JSON.parse(stored));
     } catch {
-      localStorage.removeItem(SESSION_KEY);
+      try { sessionStorage.removeItem(SESSION_KEY); } catch { /* ignore */ }
     }
   }, []);
 
@@ -54,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const safeUser: User = data.data;
         setUser(safeUser);
-        try { localStorage.setItem(SESSION_KEY, JSON.stringify(safeUser)); } catch { /* ignore */ }
+        try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(safeUser)); } catch { /* ignore */ }
 
         // Track session in DB (fire-and-forget)
         fetch('/api/sessions', {
@@ -65,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .then(r => r.json())
           .then(d => {
             if (d.success && d.data?.id) {
-              try { localStorage.setItem(SESSION_ID_KEY, d.data.id); } catch { /* ignore */ }
+              try { sessionStorage.setItem(SESSION_ID_KEY, d.data.id); } catch { /* ignore */ }
             }
           })
           .catch(() => { /* non-critical */ });
@@ -103,16 +107,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // ── Logout ──────────────────────────────────────────────────────────────────
   const logout = useCallback(() => {
     try {
-      const sessionId = localStorage.getItem(SESSION_ID_KEY);
+      const sessionId = sessionStorage.getItem(SESSION_ID_KEY);
       if (sessionId) {
         fetch('/api/sessions', {
           method:  'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({ sessionId }),
         }).catch(() => { /* non-critical */ });
-        localStorage.removeItem(SESSION_ID_KEY);
+        sessionStorage.removeItem(SESSION_ID_KEY);
       }
-      localStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_KEY);
     } catch { /* ignore */ }
 
     setUser(null);
