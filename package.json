@@ -22,6 +22,8 @@
     "security:gen-secrets": "ts-node scripts/generate-secrets.ts",
     "test:security": "jest __tests__/securityAudit.test.ts",
     "security:check": "ts-node scripts/security-check.ts",
+    "assets:optimize-images": "node scripts/optimize-images.js",
+    "assets:optimize-videos": "python scripts/optimize-videos.py",
     "postinstall": "prisma generate"
   },
   "prisma": {
