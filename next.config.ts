@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = "file:./dev.db";
+}
+
 const securityHeaders = [
   // Prevent MIME sniffing
   { key: "X-Content-Type-Options", value: "nosniff" },
