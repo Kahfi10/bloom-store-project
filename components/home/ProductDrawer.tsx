@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useCallback } from 'react';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import Link from 'next/link';
 import { Product } from '@/types';
 import { gsap, ScrollTrigger } from '@/lib/gsap';
@@ -14,7 +14,7 @@ interface ProductDrawerProps {
   onClose: () => void;
 }
 
-// â”€â”€â”€ Fact card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Fact card ─────────────────────────────────────────────────────────────
 function FactCard({
   icon, label, value,
 }: { icon: React.ReactNode; label: string; value: string }) {
@@ -29,7 +29,7 @@ function FactCard({
   );
 }
 
-// â”€â”€â”€ Section label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Section label ─────────────────────────────────────────────────────────
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p className="text-xs font-bold tracking-[0.25em] uppercase text-bloom-secondary mb-4">
@@ -38,14 +38,14 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-// â”€â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Main component ────────────────────────────────────────────────────────
 export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawerProps) {
   const drawerRef     = useRef<HTMLDivElement>(null);
   const backdropRef   = useRef<HTMLDivElement>(null);
   const bodyRef       = useRef<HTMLDivElement>(null);   // scrollable body
   const heroImgRef    = useRef<HTMLDivElement>(null);   // parallax target
 
-  // â”€â”€ Open / close animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Open / close animation ───────────────────────────────────────────────
   useEffect(() => {
     const drawer   = drawerRef.current;
     const backdrop = backdropRef.current;
@@ -70,7 +70,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
     }
   }, [isOpen]);
 
-  // â”€â”€ GSAP scroll effects inside drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── GSAP scroll effects inside drawer ────────────────────────────────────
   useEffect(() => {
     if (!isOpen || !product || !bodyRef.current) return;
 
@@ -133,7 +133,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
     return () => clearTimeout(timer);
   }, [isOpen, product]);
 
-  // â”€â”€ ESC key â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── ESC key ──────────────────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && isOpen) onClose(); };
     window.addEventListener('keydown', onKey);
@@ -168,7 +168,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
         className="fixed top-0 right-0 z-[70] h-full w-full max-w-[520px] bg-white shadow-2xl flex-col"
         style={{ display: 'none', transform: 'translateX(100%)' }}
       >
-        {/* â”€â”€ Sticky header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── Sticky header ───────────────────────────────────────────────── */}
         <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 bg-white/90 backdrop-blur-md border-b border-bloom-border z-10">
           <div className="flex items-center gap-2.5">
             <span className="text-xs font-bold tracking-widest uppercase text-bloom-secondary bg-bloom-surface px-2.5 py-1 rounded-full border border-bloom-border">
@@ -183,17 +183,19 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
           </button>
         </div>
 
-        {/* â”€â”€ Scrollable body â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+        {/* ── Scrollable body ────────────────────────────────────────────── */}
         {product && (
           <div ref={bodyRef} className="flex-1 overflow-y-auto">
 
-            {/* â”€â”€ 1. Hero image â€” parallax â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* ── 1. Hero image — parallax ── */}
             <div className="relative h-[320px] overflow-hidden bg-bloom-surface">
+              <div className="absolute inset-0 skeleton-shimmer pointer-events-none" aria-hidden="true" />
               <div ref={heroImgRef} className="absolute inset-0 scale-110">
-                <Image
+                <SmartImage
                   src={product.heroImage}
                   alt={product.name}
                   fill
+                  wrapperClassName="w-full h-full"
                   className="object-cover"
                   sizes="520px"
                   priority
@@ -296,7 +298,7 @@ export default function ProductDrawer({ product, isOpen, onClose }: ProductDrawe
                     key={i}
                     className="relative w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-bloom-surface img-zoom-container"
                   >
-                    <Image src={src} alt={`${product.name} ${i + 1}`} fill className="object-cover" sizes="96px" />
+                    <SmartImage src={src} alt={`${product.name} ${i + 1}`} fill wrapperClassName="w-full h-full" className="object-cover" sizes="96px" />
                   </div>
                 ))}
               </div>

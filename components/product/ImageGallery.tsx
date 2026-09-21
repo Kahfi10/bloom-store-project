@@ -27,6 +27,8 @@ export default function ImageGallery({ images, name }: ImageGalleryProps) {
 
       {/* ── Main Image — all images stacked, active = opacity-100 ── */}
       <div className="relative aspect-square rounded-card overflow-hidden bg-bloom-surface group">
+        {/* Shimmer skeleton behind images */}
+        <div className="absolute inset-0 skeleton-shimmer pointer-events-none" aria-hidden="true" />
 
         {/* Render every image; CSS opacity crossfade handles the transition */}
         {images.map((src, i) => (

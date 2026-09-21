@@ -1,6 +1,6 @@
-﻿'use client';
+'use client';
 
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Product } from '@/types';
@@ -74,12 +74,13 @@ export default function ProductCard({
         tabIndex={-1}
       />
 
-      {/* ── Image — pointer-events-none → clicks pass through to Link ── */}
+      {/* ── Image with shimmer skeleton & smooth reveal ── */}
       <div className="relative aspect-square bg-bloom-surface overflow-hidden pointer-events-none">
-        <Image
+        <SmartImage
           src={product.heroImage}
           alt={product.name}
           fill
+          wrapperClassName="w-full h-full"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority={animationDelay === 0}

@@ -21,6 +21,9 @@ export const viewport: Viewport = {
   minimumScale: 1,
 };
 
+import { Suspense } from 'react';
+import TopProgressBar from '@/components/ui/TopProgressBar';
+
 export default function RootLayout({
   children,
 }: {
@@ -29,6 +32,9 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className="bg-bloom-bg text-bloom-text antialiased">
+        <Suspense fallback={null}>
+          <TopProgressBar />
+        </Suspense>
         <AuthProvider>
           <CartProvider>
             <OrderProvider>
