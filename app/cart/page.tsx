@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
@@ -24,7 +24,7 @@ function CartRow({ item, onQtyChange, onRemove }: {
       {/* Thumbnail */}
       <Link href={`/products/${product.slug}`}
         className="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-bloom-surface img-zoom-container">
-        <Image src={product.heroImage} alt={product.name} fill className="object-cover" sizes="80px" />
+        <SmartImage src={product.heroImage} alt={product.name} fill wrapperClassName="w-full h-full" className="object-cover" sizes="80px" />
       </Link>
 
       {/* Info */}

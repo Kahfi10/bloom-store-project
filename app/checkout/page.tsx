@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, FormEvent } from 'react';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
@@ -183,7 +183,7 @@ export default function CheckoutPage() {
                   {items.map(({ product, qty }) => (
                     <div key={product.id} className="flex items-center gap-3">
                       <div className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-bloom-surface">
-                        <Image src={product.heroImage} alt={product.name} fill className="object-cover" sizes="48px" />
+                        <SmartImage src={product.heroImage} alt={product.name} fill wrapperClassName="w-full h-full" className="object-cover" sizes="48px" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold text-bloom-text truncate">{product.name}</p>

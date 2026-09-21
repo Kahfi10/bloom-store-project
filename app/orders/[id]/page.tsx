@@ -1,7 +1,7 @@
-﻿'use client';
+'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import SmartImage from '@/components/ui/SmartImage';
 import { useParams, useRouter } from 'next/navigation';
 import { useOrder, VALID_TRANSITIONS } from '@/context/OrderContext';
 import { useAuth } from '@/context/AuthContext';
@@ -183,7 +183,7 @@ export default function OrderDetailPage() {
                 {order.items.map(({ product, qty }) => (
                   <div key={product.id} className="flex items-center gap-3 pt-3 first:pt-0">
                     <div className="relative w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-bloom-surface">
-                      <Image src={product.heroImage} alt={product.name} fill className="object-cover" sizes="56px" />
+                      <SmartImage src={product.heroImage} alt={product.name} fill wrapperClassName="w-full h-full" className="object-cover" sizes="56px" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-bloom-text truncate">{product.name}</p>
