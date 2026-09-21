@@ -55,9 +55,6 @@ export default function HeroSection() {
     va.src = playlistRef.current[0];
     va.playbackRate = PLAYBACK_RATE;
     va.play().catch(() => {});
-    vb.src = playlistRef.current[1 % VIDEOS.length];
-    vb.playbackRate = PLAYBACK_RATE;
-    vb.load();
 
     function doTransition(fromIsA: boolean) {
       if (transitioningRef.current) return;
@@ -65,6 +62,10 @@ export default function HeroSection() {
       const incoming = fromIsA ? vb : va;
       const outgoing = fromIsA ? va : vb;
       if (!incoming || !outgoing) { transitioningRef.current = false; return; }
+      if (!incoming.src) {
+        incoming.src = playlistRef.current[nextIdxRef.current];
+        incoming.playbackRate = PLAYBACK_RATE;
+      }
       incoming.play().catch(() => {});
       incoming.style.opacity = '1';
       outgoing.style.opacity = '0';
@@ -84,6 +85,10 @@ export default function HeroSection() {
       if (transitioningRef.current) return;
       const { duration, currentTime } = va!;
       if (isNaN(duration) || currentTime < 1) return;
+      if (!vb!.src) {
+        vb!.src = playlistRef.current[1 % VIDEOS.length];
+        vb!.playbackRate = PLAYBACK_RATE;
+      }
       if (duration - currentTime <= TRIGGER_BEFORE_S) doTransition(true);
     }
     function onBTime() {
@@ -165,8 +170,26 @@ export default function HeroSection() {
       ref={sectionRef}
       className="relative h-screen min-h-[600px] max-h-[900px] w-full overflow-hidden flex items-center justify-center"
     >
-      <video ref={vaRef} muted playsInline aria-hidden="true" className="hero-video" style={FADE_TRANSITION} />
-      <video ref={vbRef} muted playsInline aria-hidden="true" className="hero-video" style={FADE_TRANSITION} />
+      <video
+        ref={vaRef}
+        muted
+        playsInline
+        preload="metadata"
+        poster="/assets/images/hero-poster.jpg"
+        aria-hidden="true"
+        className="hero-video"
+        style={FADE_TRANSITION}
+      />
+      <video
+        ref={vbRef}
+        muted
+        playsInline
+        preload="none"
+        poster="/assets/images/hero-poster.jpg"
+        aria-hidden="true"
+        className="hero-video"
+        style={FADE_TRANSITION}
+      />
       <div className="absolute inset-0 hero-overlay" style={{ transform: 'translate3d(0,0,0)' }} />
 
       {/* ── Hero Content ─────────────────────────────── */}

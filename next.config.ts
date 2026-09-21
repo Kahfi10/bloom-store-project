@@ -36,8 +36,8 @@ const nextConfig: NextConfig = {
   // Disable public source maps in production to prevent source code disclosure
   productionBrowserSourceMaps: false,
   images: {
-    // Bypass Next.js image optimization — serve images directly via Nginx
-    unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 86400,
   },
   async headers() {
     return [
