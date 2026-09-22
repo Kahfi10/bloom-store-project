@@ -114,38 +114,42 @@ export default function ImageGallery({ images, name }: ImageGalleryProps) {
 
       {/* Thumbnail Strip */}
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-1 pt-1" style={{ scrollbarWidth: 'none' }}>
-          {images.map((src, i) => (
-            <button
-              key={i}
-              onClick={() => switchImage(i)}
-              aria-label={`Lihat foto ${i + 1}`}
-              className="relative flex-shrink-0 focus:outline-none"
-              style={{
-                transition: 'opacity 0.2s ease, transform 0.2s ease',
-                opacity:   i === activeIndex ? 1 : 0.45,
-                transform: i === activeIndex ? 'scale(1)' : 'scale(0.95)',
-              }}
-            >
-              <div
-                className="w-20 h-20 rounded-2xl overflow-hidden bg-bloom-surface"
+        <div
+          className="flex gap-3 overflow-x-auto py-2 px-1 [&::-webkit-scrollbar]:hidden"
+          style={{ scrollbarWidth: 'none' }}
+        >
+          {images.map((src, i) => {
+            const isActive = i === activeIndex;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => switchImage(i)}
+                aria-label={`Lihat foto ${i + 1}`}
+                className={`
+                  group relative flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden
+                  transition-all duration-200 focus:outline-none cursor-pointer
+                  ${isActive
+                    ? 'ring-2 ring-bloom-text ring-offset-2 ring-offset-white scale-100 opacity-100 shadow-md'
+                    : 'opacity-75 hover:opacity-100 ring-1 ring-bloom-border/70 hover:ring-bloom-text/50 scale-[0.96]'
+                  }
+                `}
                 style={{
-                  boxShadow: i === activeIndex
-                    ? '0 0 0 2.5px #1D1D1F'
-                    : '0 0 0 1px rgba(0,0,0,0.1)',
-                  transition: 'box-shadow 0.2s ease',
+                  WebkitMaskImage: '-webkit-radial-gradient(white, black)',
                 }}
               >
-                <Image
-                  src={src}
-                  alt={`${name} thumbnail ${i + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="80px"
-                />
-              </div>
-            </button>
-          ))}
+                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-bloom-surface">
+                  <Image
+                    src={src}
+                    alt={`${name} thumbnail ${i + 1}`}
+                    fill
+                    className="object-cover rounded-2xl transition-transform duration-300 group-hover:scale-105 pointer-events-none"
+                    sizes="80px"
+                  />
+                </div>
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
